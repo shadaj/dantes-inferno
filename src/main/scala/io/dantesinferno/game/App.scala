@@ -17,76 +17,7 @@ object AppCSS extends js.Object
 @js.native
 object ReactLogo extends js.Object
 
-trait CollisionGeometry[Self] {
-  def markOnGround(onGround: Boolean): Self
-  def collideWith(obj: CollisionGeometry[_]): Self
-}
-
-trait CollisionBox[Self <: CollidingObjectState[Self]] extends CollisionGeometry[Self] {
-  def left: Double
-  def bottom: Double
-  def right: Double
-  def top: Double
-
-  def state: Self
-  def transform(newLeft: Double, newBottom: Double): Self
-
-  override def collideWith(obj: CollisionGeometry[_]): Self = {
-    obj match {
-      case otherBox: CollisionBox[_] =>
-        var afterCollision = state
-        def myGeometry = afterCollision.collisionGeometry.asInstanceOf[CollisionBox[Self]]
-
-        def intersectsX = myGeometry.left < otherBox.right && myGeometry.right > otherBox.left
-        def intersectsY = myGeometry.bottom < otherBox.top && myGeometry.top > otherBox.bottom
-
-        if ((myGeometry.left + 5 < otherBox.right && myGeometry.right - 5 > otherBox.left) && intersectsY && myGeometry.bottom > otherBox.bottom) {
-          afterCollision = transform(myGeometry.left, otherBox.top)
-          afterCollision = myGeometry.markOnGround(true)
-        }
-
-        if ((myGeometry.left + 5 < otherBox.right && myGeometry.right - 5 > otherBox.left) && myGeometry.bottom <= otherBox.top && myGeometry.top > otherBox.bottom) {
-          afterCollision = myGeometry.markOnGround(true)
-        }
-
-        if (intersectsX && intersectsY && myGeometry.top < otherBox.top) {
-          afterCollision = transform(myGeometry.left, otherBox.bottom - (myGeometry.top - myGeometry.bottom))
-        }
-
-        if (intersectsX && intersectsY && myGeometry.left < otherBox.left) {
-          afterCollision = transform(otherBox.left - (myGeometry.right - myGeometry.left), myGeometry.bottom)
-        }
-
-        if (intersectsX && intersectsY && myGeometry.right > otherBox.right) {
-          afterCollision = transform(otherBox.right, myGeometry.bottom)
-        }
-
-        if (myGeometry.bottom <= 0) {
-          afterCollision = transform(myGeometry.left, 0)
-          afterCollision = myGeometry.markOnGround(true)
-        }
-
-        afterCollision
-    }
-  }
-}
-
-trait CollidingObjectState[Self <: CollidingObjectState[Self]] extends ObjectState[Self] { self: Self =>
-  val collisionGeometry: CollisionGeometry[Self]
-
-  override def update(worldState: WorldState): Self = {
-    worldState.objects.filterNot(_ == this).filter(_.isInstanceOf[CollidingObjectState[_]]).foldLeft(collisionGeometry.markOnGround(false)) { (self, obj) =>
-      self.collisionGeometry.collideWith(obj.asInstanceOf[CollidingObjectState[_]].collisionGeometry)
-    }
-  }
-}
-
-trait ObjectState[Self <: ObjectState[Self]] {
-  def update(worldState: WorldState): Self
-  def render: ReactElement
-}
-
-case class WorldState(objects: List[ObjectState[_]])
+case class WorldState(objects: List[ObjectState[_]], windowX: Double)
 
 case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Double, onGround: Boolean) extends CollidingObjectState[DanteState] { self =>
   val collisionGeometry = new CollisionBox[DanteState] {
@@ -142,7 +73,8 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
         DanteState(
           75, 0, 0, 0, 0, true
         )
-      )
+      ),
+      0
     )
   }
 
@@ -171,18 +103,18 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
   }
 
   def animateFrame(): Unit = {
-//    setState(state.copy(
-//      danteState = state.danteState.update(???),
-//      windowX = if (state.danteState.x > state.windowX + (800 - 10 - 50)) {
-//        state.danteState.x - (800 - 10 - 50)
-//      } else if (state.danteState.x < state.windowX + 10) {
-//        state.danteState.x - 10
-//      } else {
-//        state.windowX
-//      }
-//    ))
+    val danteState = state.objects.head.asInstanceOf[DanteState]
 
-    setState(state.copy(objects = state.objects.map(_.update(state).asInstanceOf[ObjectState[_]])))
+    setState(state.copy(
+      objects = state.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
+      windowX = if (danteState.x > state.windowX + (800 - 10 - 50)) {
+        danteState.x - (800 - 10 - 50)
+      } else if (danteState.x < state.windowX + 10) {
+        danteState.x - 10
+      } else {
+        state.windowX
+      }
+    ))
 
     dom.window.requestAnimationFrame(something => {
       animateFrame()
@@ -217,7 +149,7 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
 
   def render() = {
     Stage(width = 800, height = 450)(
-      Layer(x = /*-state.windowX*/ 0D)(
+      Layer(x = -state.windowX)(
         state.objects.map(_.render)
       )
     )
