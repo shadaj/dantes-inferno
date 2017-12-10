@@ -48,10 +48,10 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
   type Props = DanteState
 
   override def render(): ReactElement = {
-    Group(x = props.x, y = (450 - props.y) - 100)(
+    Group(x = props.x, y = (450 - props.y) - props.collisionGeometry.height)(
       Rect(
         x = 0, y = 0,
-        width = 50, height = 100,
+        width = props.collisionGeometry.width, height = props.collisionGeometry.height,
         fill = "yellow"
       )
     )

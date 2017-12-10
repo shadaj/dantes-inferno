@@ -6,6 +6,9 @@ trait CollisionBox[Self <: CollidingObjectState[Self]] extends CollisionGeometry
   def right: Double
   def top: Double
 
+  def width: Double = right - left
+  def height: Double = top - bottom
+
   def state: Self
   def transform(newLeft: Double, newBottom: Double): Self
 

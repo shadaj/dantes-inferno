@@ -37,8 +37,8 @@ object ReactKonva extends js.Object {
 }
 
 @react object Rect extends ExternalComponent {
-  case class Props(x: Int, y: Int,
-                   width: Int, height: Int,
+  case class Props(x: Double, y: Double,
+                   width: Double, height: Double,
                    fill: js.UndefOr[String] = js.undefined)
 
   override val component: |[String, js.Object] = ReactKonva.Rect

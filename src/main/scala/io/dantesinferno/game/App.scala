@@ -32,8 +32,8 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double)
         DanteState(
           0, 0, 0, 0, 0, true
         ),
-        DanteState(
-          75, 0, 0, 0, 0, true
+        StaticBoxState(
+          75, 0
         )
       ),
       0
