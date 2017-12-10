@@ -31,11 +31,11 @@ trait CollisionBox[Self <: CollidingObjectState[Self]] extends CollisionGeometry
         }
 
         if (intersectsX && intersectsY && myGeometry.top < otherBox.top) {
-          afterCollision = transform(myGeometry.left, otherBox.bottom - (myGeometry.top - myGeometry.bottom))
+          afterCollision = transform(myGeometry.left, otherBox.bottom - myGeometry.height)
         }
 
         if (intersectsX && intersectsY && myGeometry.left < otherBox.left) {
-          afterCollision = transform(otherBox.left - (myGeometry.right - myGeometry.left), myGeometry.bottom)
+          afterCollision = transform(otherBox.left - myGeometry.width, myGeometry.bottom)
         }
 
         if (intersectsX && intersectsY && myGeometry.right > otherBox.right) {
