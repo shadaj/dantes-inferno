@@ -22,7 +22,10 @@ object ReactKonva extends js.Object {
   override val component: |[String, js.Object] = ReactKonva.Stage
 }
 
-object Layer extends ExternalComponentNoProps {
+@react object Layer extends ExternalComponent {
+  case class Props(x: js.UndefOr[Double] = js.undefined,
+                   y: js.UndefOr[Double] = js.undefined)
+
   override val component: |[String, js.Object] = ReactKonva.Layer
 }
 
