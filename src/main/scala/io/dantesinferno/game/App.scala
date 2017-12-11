@@ -28,10 +28,13 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double, tick: Int)
     WorldState(
       List(
         DanteState(
-          0, 0, 0, 0, 0, true
+          0, 50, 0, 0, 0, true
         ),
         StaticBoxState(
-          75, 0
+          75, 50
+        ),
+        GroundState(
+          0
         )
       ),
       0,

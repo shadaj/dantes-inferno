@@ -42,11 +42,6 @@ trait CollisionBox[Self <: CollidingObjectState[Self]] extends CollisionGeometry
           afterCollision = transform(otherBox.right, myGeometry.bottom)
         }
 
-        if (myGeometry.bottom <= 0) {
-          afterCollision = transform(myGeometry.left, 0)
-          afterCollision = myGeometry.markOnGround(true)
-        }
-
         afterCollision
     }
   }
