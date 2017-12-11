@@ -8,7 +8,7 @@ case class WallState(x: Double) extends CollidingObjectState[WallState] { self =
   val collisionGeometry = new CollisionBox[WallState] {
     override def left: Double = x
     override def bottom: Double = 0D
-    override def right: Double = x + 50
+    override def right: Double = x + 200
     override def top: Double = 1000D
 
     override def state = self

@@ -25,7 +25,7 @@ object AppCSS extends js.Object
               x = 150, y = 50
             ),
             WallState(
-              x = -50
+              x = -200
             ),
             WallState(
               x = 1000
@@ -41,9 +41,12 @@ object AppCSS extends js.Object
             )
           ),
           triggeredQuotes = List(
-            0D -> List(
-              classOf[VirgilState] -> "This is the entrance to the amaze amaze canto amaze canto amaze",
-              classOf[DanteState] -> "Hello I am dante lolz"
+            250D -> (
+              List(
+                classOf[VirgilState] -> "This is the entrance to the amaze amaze canto amaze canto amaze",
+                classOf[DanteState] -> "Hello I am dante lolz"
+              ),
+              Some(200D)
             )
           ),
           windowX = -20

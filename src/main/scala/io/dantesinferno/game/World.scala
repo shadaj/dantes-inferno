@@ -11,9 +11,11 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
 case class WorldState(objects: List[ObjectState[_]],
-                      triggeredQuotes: List[(Double, List[(Class[_], String)])],
+                      triggeredQuotes: List[(Double, (List[(Class[_], String)], Option[Double]))],
+                      windowX: Double = 0,
                       queuedQuotes: List[(Class[_], String)] = List.empty,
-                      windowX: Double = 0, tick: Int = 0,
+                      animatingWindowX: Double = 0,
+                      tick: Int = 0,
                       currentQuote: Option[(Class[_], String)] = None)
 
 @react class World extends Component {
@@ -100,20 +102,26 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def animateFrame(): Unit = {
-    val newWindow = if (danteState.x > state.windowX + (800 - 10 - 50)) {
-      danteState.x - (800 - 10 - 50)
-    } else if (danteState.x < state.windowX + 10) {
-      danteState.x - 10
+    val windowTriggerBorder = 200
+    val newWindow = if (danteState.x > state.windowX + (800 - windowTriggerBorder - 50)) {
+      danteState.x - (800 - windowTriggerBorder - 50)
+    } else if (danteState.x < state.windowX + windowTriggerBorder) {
+      danteState.x - windowTriggerBorder
     } else {
       state.windowX
     }
 
     val stateQueuedQuotesUpdated = if (state.triggeredQuotes.headOption.exists(danteState.x >= _._1)) {
       state.copy(
-        queuedQuotes = state.queuedQuotes ++ state.triggeredQuotes.head._2,
-        triggeredQuotes = state.triggeredQuotes.tail
+        queuedQuotes = state.queuedQuotes ++ state.triggeredQuotes.head._2._1,
+        triggeredQuotes = state.triggeredQuotes.tail,
+        windowX = state.triggeredQuotes.head._2._2.getOrElse(newWindow)
       )
-    } else state
+    } else {
+      state.copy(
+        windowX = newWindow
+      )
+    }
 
     val stateQuotesUpdated = if (stateQueuedQuotesUpdated.queuedQuotes.nonEmpty && stateQueuedQuotesUpdated.currentQuote.isEmpty) {
       stateQueuedQuotesUpdated.copy(
@@ -130,12 +138,12 @@ case class WorldState(objects: List[ObjectState[_]],
         queuedQuotes = stateQueuedQuotesUpdated.queuedQuotes.tail,
         currentQuote = Some(stateQueuedQuotesUpdated.queuedQuotes.head)
       )
-    } else state
+    } else stateQueuedQuotesUpdated
 
     setState(stateQuotesUpdated.copy(
       objects = stateQuotesUpdated.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
-      windowX = newWindow,
-      tick = state.tick + 1
+      animatingWindowX = (stateQuotesUpdated.animatingWindowX * 15 + stateQuotesUpdated.windowX) / 16,
+      tick = stateQuotesUpdated.tick + 1
     ))
 
     dom.window.requestAnimationFrame(something => {
@@ -163,7 +171,7 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def render() = {
-    Layer(x = -state.windowX)(
+    Layer(x = -state.animatingWindowX)(
       state.objects.zipWithIndex.map { case (obj, index) =>
         Fragment.withKey(index.toString)(obj.render(state.tick, state.windowX))
       }
