@@ -8,17 +8,20 @@ import org.scalajs.dom.html.Image
 import org.scalajs.dom.raw.HTMLImageElement
 
 case class MinotaurState(x: Double, y: Double,
+                         spawnDantePosition: Double,
+                         hasSpawned: Boolean = false,
                          currentQuote: Option[String] = None) extends CollidingObjectState[MinotaurState] with WithQuotes[MinotaurState] { self =>
   val collisionGeometry = new CollisionBox[MinotaurState] {
-    override def left: Double = x
-    override def bottom: Double = y
-    override def right: Double = x + (68 * 4)
-    override def top: Double = y + (46 * 4)
+    override def left: Double = if (hasSpawned) x else -100
+    override def bottom: Double = if (hasSpawned) y else -100
+    override def right: Double = if (hasSpawned) x + (68 * 4) else -100
+    override def top: Double = if (hasSpawned) y + (46 * 4) else -100
 
     override def state = self
 
-    override def transform(newLeft: Double, newBottom: Double): MinotaurState =
-      copy(x = newLeft, y = newBottom)
+    override def transform(newLeft: Double, newBottom: Double): MinotaurState = {
+      if (hasSpawned) copy(x = newLeft, y = newBottom) else self
+    }
 
     override def markOnGround(onGround: Boolean): MinotaurState = self
   }
@@ -31,21 +34,29 @@ case class MinotaurState(x: Double, y: Double,
 
   override def update(worldState: WorldState): MinotaurState = {
     val danteLocation = worldState.objects.find(_.isInstanceOf[DanteState]).get.asInstanceOf[DanteState]
-    val physicsThenMove = copy(
-      x = {
-        if (danteLocation.x > (x + collisionGeometry.width / 2) + 10)
-          x + 2
-        else if (danteLocation.x < (x + collisionGeometry.width / 2) - 10)
-          x - 2
-        else x
-      }
-    )
+    if (hasSpawned) {
+      val physicsThenMove = copy(
+        x = {
+          if (danteLocation.x > (x + collisionGeometry.width / 2) + 10)
+            x + 2
+          else if (danteLocation.x < (x + collisionGeometry.width / 2) - 10)
+            x - 2
+          else x
+        }
+      )
 
-    physicsThenMove.superUpdate(worldState.copy(
-      objects =  worldState.objects.map { obj =>
-        if (obj == this) physicsThenMove else obj
+      physicsThenMove.superUpdate(worldState.copy(
+        objects = worldState.objects.map { obj =>
+          if (obj == this) physicsThenMove else obj
+        }
+      ))
+    } else {
+      if (danteLocation.x >= spawnDantePosition) {
+        copy(hasSpawned = true)
+      } else {
+        this
       }
-    ))
+    }
   }
 
   override def render(tick: Int, windowX: Double): ReactElement = {
@@ -83,34 +94,40 @@ case class MinotaurState(x: Double, y: Double,
     val spriteHeight = 46
 
     Group(x = props.ds.x, y = (450 - props.ds.y) - props.ds.collisionGeometry.height)(
-      if (state.danteImage.isDefined) {
-        Image(
-          image = state.danteImage.get,
-          x = 0, y = 0,
-          width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
-          crop = Some(Crop(
-            x = if (state.moving) spriteWidth * ((props.tick / 5) % 4) else 0,
-            y = if (state.facingRight) 0 else spriteHeight,
-            width = spriteWidth,
-            height = spriteHeight
-          ))
+      if (props.ds.hasSpawned) {
+        Fragment(
+          if (state.danteImage.isDefined) {
+            Image(
+              image = state.danteImage.get,
+              x = 0, y = 0,
+              width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
+              crop = Some(Crop(
+                x = if (state.moving) spriteWidth * ((props.tick / 5) % 4) else 0,
+                y = if (state.facingRight) 0 else spriteHeight,
+                width = spriteWidth,
+                height = spriteHeight
+              ))
+            )
+          } else {
+            Rect(
+              x = 0, y = 0,
+              width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
+              fill = "yellow"
+            )
+          },
+          props.ds.currentQuote.map { quote =>
+            Text(
+              x = 20, y = -50,
+              width = 300,
+              text = quote,
+              fontSize = 20, fontFamily = "Times",
+              fill = "black"
+            ): ReactElement
+          }.getOrElse(Fragment())
         )
       } else {
-        Rect(
-          x = 0, y = 0,
-          width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
-          fill = "yellow"
-        )
-      },
-      props.ds.currentQuote.map { quote =>
-        Text(
-          x = 20, y = -50,
-          width = 300,
-          text = quote,
-          fontSize = 20, fontFamily = "Times",
-          fill = "black"
-        ): ReactElement
-      }.getOrElse(Fragment())
+        Fragment()
+      }
     )
   }
 }

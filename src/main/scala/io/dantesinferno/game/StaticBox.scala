@@ -4,12 +4,12 @@ import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
 import me.shadaj.slinky.core.facade.ReactElement
 
-case class StaticBoxState(x: Double, y: Double) extends CollidingObjectState[StaticBoxState] { self =>
+case class StaticBoxState(x: Double, y: Double, width: Double, height: Double) extends CollidingObjectState[StaticBoxState] { self =>
   val collisionGeometry = new CollisionBox[StaticBoxState] {
     override def left: Double = x
     override def bottom: Double = y
-    override def right: Double = x + 50
-    override def top: Double = y + 50
+    override def right: Double = x + self.width
+    override def top: Double = y + self.height
 
     override def state = self
     override def transform(newLeft: Double, newBottom: Double): StaticBoxState = self

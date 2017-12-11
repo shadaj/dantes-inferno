@@ -9,7 +9,7 @@ case class WallState(x: Double) extends CollidingObjectState[WallState] { self =
     override def left: Double = x
     override def bottom: Double = 0D
     override def right: Double = x + 200
-    override def top: Double = 1000D
+    override def top: Double = 100000D
 
     override def state = self
     override def transform(newLeft: Double, newBottom: Double): WallState = self
@@ -27,8 +27,8 @@ case class WallState(x: Double) extends CollidingObjectState[WallState] { self =
   override def render(): ReactElement = {
     Group(x = props.x, y = 0D)(
       Rect(
-        x = 0, y = 0,
-        width = props.collisionGeometry.width, height = props.collisionGeometry.height,
+        x = 0, y = 450,
+        width = props.collisionGeometry.width, height = -props.collisionGeometry.height,
         fill = "gray"
       )
     )

@@ -11,12 +11,14 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
 case class WorldState(objects: List[ObjectState[_]],
-                      triggeredQuotes: List[(Double, (List[(Class[_], String)], Option[Double]))],
+                      triggeredQuotes: List[(Double, (List[(String, String, Option[Double], Option[Long])]))],
                       windowX: Double = 0,
-                      queuedQuotes: List[(Class[_], String)] = List.empty,
+                      windowY: Double = 0,
+                      queuedQuotes: List[(String, String, Option[Double], Option[Long])] = List.empty,
                       animatingWindowX: Double = 0,
+                      animatingWindowY: Double = 0,
                       tick: Int = 0,
-                      currentQuote: Option[(Class[_], String)] = None)
+                      currentQuote: Option[((String, String, Option[Double], Option[Long]), Long)] = None)
 
 @react class World extends Component {
   type Props = WorldState
@@ -40,51 +42,57 @@ case class WorldState(objects: List[ObjectState[_]],
     case o => o
   })
 
+  def stateWithQuoteAdvanced(stateToTransform: WorldState): WorldState = {
+    if (stateToTransform.queuedQuotes.nonEmpty) {
+      stateToTransform.copy(
+        objects = stateToTransform.objects.map { obj =>
+          if (stateToTransform.currentQuote.exists(_._1._1 == obj.getClass.getSimpleName)) {
+            obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
+          } else {
+            obj
+          }
+        }.map { obj =>
+          if (stateToTransform.queuedQuotes.head._1 == obj.getClass.getSimpleName) {
+            obj.asInstanceOf[WithQuotes[_]].setQuote(Some(stateToTransform.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
+          } else {
+            obj
+          }
+        },
+        queuedQuotes = stateToTransform.queuedQuotes.tail,
+        currentQuote = Some(stateToTransform.queuedQuotes.head, System.currentTimeMillis())
+      )
+    } else {
+      stateToTransform.copy(
+        objects = stateToTransform.objects.map { obj =>
+          if (stateToTransform.currentQuote.exists(_._1._1 == obj.getClass.getSimpleName)) {
+            obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
+          } else {
+            obj
+          }
+        },
+        queuedQuotes = List.empty,
+        currentQuote = None
+      )
+    }
+  }
+
   def onKeyDown(key: KeyboardEvent): Unit = {
+    val quoteAllowsMove = state.currentQuote.isEmpty || state.currentQuote.exists(_._1._3.isEmpty)
+
     key.key match {
       case "ArrowRight" =>
-        if (state.queuedQuotes.nonEmpty) {
-          setState(state.copy(
-            objects = state.objects.map { obj =>
-              if (state.currentQuote.exists(_._1.isInstance(obj))) {
-                obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
-              } else {
-                obj
-              }
-            }.map { obj =>
-              if (state.queuedQuotes.head._1.isInstance(obj)) {
-                obj.asInstanceOf[WithQuotes[_]].setQuote(Some(state.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
-              } else {
-                obj
-              }
-            },
-            queuedQuotes = state.queuedQuotes.tail,
-            currentQuote = Some(state.queuedQuotes.head)
-          ))
-        } else if (state.currentQuote.isDefined) {
-          setState(state.copy(
-            objects = state.objects.map { obj =>
-              if (state.currentQuote.exists(_._1.isInstance(obj))) {
-                obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
-              } else {
-                obj
-              }
-            },
-            queuedQuotes = List.empty,
-            currentQuote = None
-          ))
-        } else {
+        if ((state.queuedQuotes.nonEmpty || state.currentQuote.isDefined) && state.currentQuote.get._1._4.isEmpty) {
+          setState(stateWithQuoteAdvanced(state))
+        } else if (quoteAllowsMove) {
           setState(updateDanteState(_.copy(xAcc = 2)))
         }
       case "ArrowLeft" =>
-        if (state.currentQuote.isDefined) {
-        } else {
+        if (quoteAllowsMove) {
           setState(updateDanteState(_.copy(xAcc = -2)))
         }
 
       case "ArrowUp" =>
-        if (state.currentQuote.isDefined) {
-        } else if (danteState.onGround) {
+        if (quoteAllowsMove && danteState.onGround) {
           setState(updateDanteState(_.copy(yVel = 20)))
         }
 
@@ -102,31 +110,37 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def animateFrame(): Unit = {
-    val windowTriggerBorder = 200
-    val newWindow = if (danteState.x > state.windowX + (800 - windowTriggerBorder - 50)) {
-      danteState.x - (800 - windowTriggerBorder - 50)
-    } else if (danteState.x < state.windowX + windowTriggerBorder) {
-      danteState.x - windowTriggerBorder
+    val windowTriggerBorderX = 200
+    val newWindowX = if (danteState.x > state.windowX + (800 - windowTriggerBorderX - 50)) {
+      danteState.x - (800 - windowTriggerBorderX - 50)
+    } else if (danteState.x < state.windowX + windowTriggerBorderX) {
+      danteState.x - windowTriggerBorderX
     } else {
       state.windowX
     }
 
-    val stateQueuedQuotesUpdated = if (state.triggeredQuotes.headOption.exists(danteState.x >= _._1)) {
+    val windowTriggerBorderY = 100
+    val newWindowY = if (danteState.y > state.windowY + (450 - windowTriggerBorderY - 50)) {
+      danteState.y - (450 - windowTriggerBorderY - 50)
+    } else if (danteState.y < state.windowY + windowTriggerBorderY) {
+      danteState.y - windowTriggerBorderY
+    } else {
+      state.windowY
+    }
+
+    val stateQueuedQuotesUpdated = if (state.queuedQuotes.isEmpty && state.triggeredQuotes.headOption.exists(danteState.x >= _._1)) {
       state.copy(
-        queuedQuotes = state.queuedQuotes ++ state.triggeredQuotes.head._2._1,
-        triggeredQuotes = state.triggeredQuotes.tail,
-        windowX = state.triggeredQuotes.head._2._2.getOrElse(newWindow)
+        queuedQuotes = state.queuedQuotes ++ state.triggeredQuotes.head._2,
+        triggeredQuotes = state.triggeredQuotes.tail
       )
     } else {
-      state.copy(
-        windowX = newWindow
-      )
+      state
     }
 
     val stateQuotesUpdated = if (stateQueuedQuotesUpdated.queuedQuotes.nonEmpty && stateQueuedQuotesUpdated.currentQuote.isEmpty) {
       stateQueuedQuotesUpdated.copy(
         objects = stateQueuedQuotesUpdated.objects.map { obj =>
-          if (stateQueuedQuotesUpdated.queuedQuotes.head._1.isInstance(obj)) {
+          if (stateQueuedQuotesUpdated.queuedQuotes.head._1 == obj.getClass.getSimpleName) {
             obj.asInstanceOf[WithQuotes[_]].setQuote(Some(stateQueuedQuotesUpdated.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
           } else {
             obj
@@ -136,14 +150,24 @@ case class WorldState(objects: List[ObjectState[_]],
           case o => o
         },
         queuedQuotes = stateQueuedQuotesUpdated.queuedQuotes.tail,
-        currentQuote = Some(stateQueuedQuotesUpdated.queuedQuotes.head)
+        currentQuote = Some(stateQueuedQuotesUpdated.queuedQuotes.head, System.currentTimeMillis())
       )
     } else stateQueuedQuotesUpdated
 
-    setState(stateQuotesUpdated.copy(
-      objects = stateQuotesUpdated.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
-      animatingWindowX = (stateQuotesUpdated.animatingWindowX * 15 + stateQuotesUpdated.windowX) / 16,
-      tick = stateQuotesUpdated.tick + 1
+    val withAutoAdvance = if (stateQuotesUpdated.currentQuote.exists(quote => quote._1._4.exists(timeout => (System.currentTimeMillis() - quote._2) > timeout))) {
+      stateWithQuoteAdvanced(stateQuotesUpdated)
+    } else stateQuotesUpdated
+
+    val withWindowPosition = withAutoAdvance.copy(
+      windowX = if (withAutoAdvance.currentQuote.isDefined) withAutoAdvance.currentQuote.get._1._3.getOrElse(newWindowX) else newWindowX,
+      windowY = newWindowY
+    )
+
+    setState(withWindowPosition.copy(
+      objects = withWindowPosition.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
+      animatingWindowX = (withWindowPosition.animatingWindowX * 15 + withWindowPosition.windowX) / 16,
+      animatingWindowY = (withWindowPosition.animatingWindowY * 15 + withWindowPosition.windowY) / 16,
+      tick = withWindowPosition.tick + 1
     ))
 
     dom.window.requestAnimationFrame(something => {
@@ -171,7 +195,7 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def render() = {
-    Layer(x = -state.animatingWindowX)(
+    Layer(x = -state.animatingWindowX, y = state.windowY)(
       state.objects.zipWithIndex.map { case (obj, index) =>
         Fragment.withKey(index.toString)(obj.render(state.tick, state.windowX))
       }

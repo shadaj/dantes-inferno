@@ -4,7 +4,7 @@ import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
 import me.shadaj.slinky.core.facade.ReactElement
 
-case class GroundState(y: Double) extends CollidingObjectState[GroundState] { self =>
+case class GroundState(y: Double, x: Double = -1000000D, width: Double = 2000000D) extends CollidingObjectState[GroundState] { self =>
   val collisionGeometry = new CollisionBox[GroundState] {
     override def left: Double = -1000000D
     override def bottom: Double = y
