@@ -2,10 +2,7 @@ package io.dantesinferno.game
 
 import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
-import me.shadaj.slinky.core.facade.Fragment
 import me.shadaj.slinky.web.html._
-import org.scalajs.dom
-import org.scalajs.dom.raw.{HTMLCanvasElement, KeyboardEvent}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
@@ -14,112 +11,36 @@ import scala.scalajs.js.annotation.JSImport
 @js.native
 object AppCSS extends js.Object
 
-@JSImport("resources/logo.svg", JSImport.Default)
-@js.native
-object ReactLogo extends js.Object
-
-case class WorldState(objects: List[ObjectState[_]], windowX: Double, tick: Int)
-
 @react class App extends Component {
   type Props = Unit
 
-  type State = WorldState
-
-  override def initialState: App.State = {
-    WorldState(
-      List(
-        DanteState(
-          0, 50, 0, 0, 0, true
-        ),
-        StaticBoxState(
-          75, 50
-        ),
-        WallState(
-          x = -50
-        ),
-        WallState(
-          x = 1000
-        ),
-        GroundState(
-          0
-        )
-      ),
-      0,
-      0
-    )
-  }
-
   private val css = AppCSS
-
-  def onKeyDown(key: KeyboardEvent): Unit = {
-    key.key match {
-      case "ArrowRight" => setState(state.copy(objects = state.objects.head.asInstanceOf[DanteState].copy(xAcc = 2) :: state.objects.tail))
-      case "ArrowLeft" => setState(state.copy(objects = state.objects.head.asInstanceOf[DanteState].copy(xAcc = -2) :: state.objects.tail))
-      case "ArrowUp" =>
-        if (state.objects.head.asInstanceOf[DanteState].onGround) { // TODO: fix this
-          setState(state.copy(objects = state.objects.head.asInstanceOf[DanteState].copy(yVel = 20) :: state.objects.tail))
-        }
-
-      case o => println(s"Unhandled key! $o")
-    }
-  }
-
-  def onKeyUp(key: KeyboardEvent): Unit = {
-    key.key match {
-      case "ArrowRight" => setState(state.copy(objects = state.objects.head.asInstanceOf[DanteState].copy(xAcc = 0) :: state.objects.tail))
-      case "ArrowLeft" => setState(state.copy(objects = state.objects.head.asInstanceOf[DanteState].copy(xAcc = 0) :: state.objects.tail))
-      case "ArrowUp" =>
-      case o => println(s"Unhandled key! $o")
-    }
-  }
-
-  def animateFrame(): Unit = {
-    val danteState = state.objects.head.asInstanceOf[DanteState]
-
-    setState(state.copy(
-      objects = state.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
-      windowX = if (danteState.x > state.windowX + (800 - 10 - 50)) {
-        danteState.x - (800 - 10 - 50)
-      } else if (danteState.x < state.windowX + 10) {
-        danteState.x - 10
-      } else {
-        state.windowX
-      },
-      tick = state.tick + 1
-    ))
-
-    dom.window.requestAnimationFrame(something => {
-      animateFrame()
-    })
-  }
-
-  override def componentDidMount(): Unit = {
-    dom.document.onkeydown = key => {
-      onKeyDown(key)
-    }
-
-    dom.document.onkeyup = key => {
-      onKeyUp(key)
-    }
-
-    val canvasContext = dom.document.getElementsByClassName("konvajs-content")(0).firstChild.asInstanceOf[HTMLCanvasElement].getContext("2d")
-    canvasContext.imageSmoothingEnabled = false
-
-    animateFrame()
-  }
-
-  override def shouldComponentUpdate(nextProps: Unit, nextState: State): Boolean = {
-    props != nextProps || state != nextState
-  }
 
   def render() = {
     div(style := js.Dynamic.literal(width = "800px", height = "100vh", marginLeft = "auto", marginRight = "auto", display = "flex", alignItems = "center"))(
       Stage(width = 800, height = 450)(
-        Layer(x = -state.windowX)(
-          state.objects.zipWithIndex.map { case (obj, index) =>
-            Fragment.withKey(index.toString)(obj.render(state.tick))
-          }
-        )
+        World(WorldState(
+          List(
+            VirgilState(
+              x = 0, y = 50, xVel = 0
+            ),
+            DanteState(
+              x = 0, y = 50
+            ),
+            StaticBoxState(
+              x = 75, y = 50
+            ),
+            WallState(
+              x = -50
+            ),
+            WallState(
+              x = 1000
+            ),
+            GroundState(
+              y = 0
+            )
+          )
+        ))
       )
     )
   }

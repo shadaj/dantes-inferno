@@ -7,7 +7,9 @@ import org.scalajs.dom
 import org.scalajs.dom.html.Image
 import org.scalajs.dom.raw.HTMLImageElement
 
-case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Double, onGround: Boolean) extends CollidingObjectState[DanteState] { self =>
+case class DanteState(x: Double, y: Double,
+                      yVel: Double = 0, xVel: Double = 0,
+                      xAcc: Double = 0,onGround: Boolean = true) extends CollidingObjectState[DanteState] { self =>
   val collisionGeometry = new CollisionBox[DanteState] {
     override def left: Double = x
     override def bottom: Double = y
