@@ -44,7 +44,7 @@ case class DanteState(x: Double, y: Double,
     )
   }
 
-  override def render(tick: Int): ReactElement = {
+  override def render(tick: Int, windowX: Double): ReactElement = {
     Dante(Dante.Props(this, tick))
   }
 }

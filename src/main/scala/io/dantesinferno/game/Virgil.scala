@@ -2,24 +2,24 @@ package io.dantesinferno.game
 
 import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
-import me.shadaj.slinky.core.facade.ReactElement
+import me.shadaj.slinky.core.facade.{Fragment, ReactElement}
 import org.scalajs.dom
 import org.scalajs.dom.html.Image
 import org.scalajs.dom.raw.HTMLImageElement
 
-case class VirgilState(x: Double, y: Double, xVel: Double) extends ObjectState[VirgilState] { self =>
+case class VirgilState(x: Double, y: Double, xVel: Double, remainingQuotes: List[String]) extends ObjectState[VirgilState] { self =>
   override def update(worldState: WorldState): VirgilState = {
     val danteLocation =  worldState.objects.find(_.isInstanceOf[DanteState]).get.asInstanceOf[DanteState]
     self.copy(x = (x * 15 + danteLocation.x) / 16, y = (y * 15 + danteLocation.y) / 16, xVel = danteLocation.xVel)
   }
 
-  override def render(tick: Int): ReactElement = {
-    Virgil(this, tick)
+  override def render(tick: Int, windowX: Double): ReactElement = {
+    Virgil(this, tick, windowX)
   }
 }
 
 @react class Virgil extends Component {
-  case class Props(ds: VirgilState, tick: Int)
+  case class Props(ds: VirgilState, tick: Int, windowX: Double)
   case class State(danteImage: Option[Image], facingRight: Boolean, currentX: Double)
 
   override def initialState: State = State(None, facingRight = true, props.ds.x)
@@ -68,7 +68,16 @@ case class VirgilState(x: Double, y: Double, xVel: Double) extends ObjectState[V
           width = spriteWidth * 2, height = spriteHeight * 2,
           fill = "yellow"
         )
-      }
+      },
+      props.ds.remainingQuotes.headOption.map { quote =>
+        Text(
+          x = -xWithBob + props.windowX, y = -yWithBob,
+          width = 800,
+          text = quote,
+          fontSize = 20, fontFamily = "Times",
+          align = "center", fill = "black"
+        ): ReactElement
+      }.getOrElse(Fragment())
     )
   }
 }

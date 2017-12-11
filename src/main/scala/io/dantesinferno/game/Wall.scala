@@ -16,7 +16,7 @@ case class WallState(x: Double) extends CollidingObjectState[WallState] { self =
     override def markOnGround(onGround: Boolean): WallState = self
   }
 
-  override def render(tick: Int): ReactElement = {
+  override def render(tick: Int, windowX: Double): ReactElement = {
     Wall(this)
   }
 }

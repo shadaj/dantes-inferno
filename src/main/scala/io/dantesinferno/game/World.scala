@@ -24,17 +24,33 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double = 0, tick: 
   private val css = AppCSS
 
   def danteState: DanteState = state.objects.find(_.isInstanceOf[DanteState]).get.asInstanceOf[DanteState]
+  def virgilState: VirgilState = state.objects.find(_.isInstanceOf[VirgilState]).get.asInstanceOf[VirgilState]
   def updateDanteState(transform: DanteState => DanteState) = state.copy(objects = state.objects.map {
     case s: DanteState => transform(s)
+    case o => o
+  })
+  def updateVirgilState(transform: VirgilState => VirgilState) = state.copy(objects = state.objects.map {
+    case s: VirgilState => transform(s)
     case o => o
   })
 
   def onKeyDown(key: KeyboardEvent): Unit = {
     key.key match {
-      case "ArrowRight" => setState(updateDanteState(_.copy(xAcc = 2)))
-      case "ArrowLeft" => setState(updateDanteState(_.copy(xAcc = -2)))
+      case "ArrowRight" =>
+        if (virgilState.remainingQuotes.nonEmpty) {
+          setState(updateVirgilState(_.copy(remainingQuotes = virgilState.remainingQuotes.tail)))
+        } else {
+          setState(updateDanteState(_.copy(xAcc = 2)))
+        }
+      case "ArrowLeft" =>
+        if (virgilState.remainingQuotes.nonEmpty) {
+        } else {
+          setState(updateDanteState(_.copy(xAcc = -2)))
+        }
+
       case "ArrowUp" =>
-        if (danteState.onGround) {
+        if (virgilState.remainingQuotes.nonEmpty) {
+        } else if (danteState.onGround) {
           setState(updateDanteState(_.copy(yVel = 20)))
         }
 
@@ -91,7 +107,7 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double = 0, tick: 
   def render() = {
     Layer(x = -state.windowX)(
       state.objects.zipWithIndex.map { case (obj, index) =>
-        Fragment.withKey(index.toString)(obj.render(state.tick))
+        Fragment.withKey(index.toString)(obj.render(state.tick, state.windowX))
       }
     )
   }

@@ -34,7 +34,8 @@ object AppCSS extends js.Object
               y = 0
             ),
             VirgilState(
-              x = 0, y = 50, xVel = 0
+              x = 0, y = 50, xVel = 0,
+              remainingQuotes = List("lol", "wow", "amaze")
             ),
             DanteState(
               x = 75, y = 50

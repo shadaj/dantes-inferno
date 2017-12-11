@@ -16,6 +16,7 @@ object ReactKonva extends js.Object {
   val Rect: js.Object = js.native
   val Stage: js.Object = js.native
   val Image: js.Object = js.native
+  val Text: js.Object = js.native
 }
 
 @react object Stage extends ExternalComponent {
@@ -55,4 +56,15 @@ case class Crop(x: Double, y: Double, width: Double, height: Double)
                    crop: Option[Crop] = None)
 
   override val component: |[String, js.Object] = ReactKonva.Image
+}
+
+@react object Text extends ExternalComponent {
+  case class Props(x: Double, y: Double, width: Double,
+                   text: String,
+                   fontSize: Int,
+                   fontFamily: String,
+                   align: js.UndefOr[String] = js.undefined,
+                   fill: js.UndefOr[String] = js.undefined)
+
+  override val component: |[String, js.Object] = ReactKonva.Text
 }

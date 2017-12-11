@@ -16,7 +16,7 @@ case class GroundState(y: Double) extends CollidingObjectState[GroundState] { se
     override def markOnGround(onGround: Boolean): GroundState = self
   }
 
-  override def render(tick: Int): ReactElement = {
+  override def render(tick: Int, windowX: Double): ReactElement = {
     Ground(this)
   }
 }
