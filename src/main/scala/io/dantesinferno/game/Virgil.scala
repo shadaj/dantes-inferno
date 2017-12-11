@@ -35,10 +35,10 @@ case class VirgilState(x: Double, y: Double, xVel: Double) extends ObjectState[V
 
   override def componentWillReceiveProps(nextProps: Props): Unit = {
     import nextProps.ds.xVel
-    val targetX = props.ds.x + (if (state.facingRight) -60 else 60)
+    val targetX = props.ds.x + (if (state.facingRight) -75 else 75)
     setState(state.copy(
       facingRight = if (xVel > 0) true else if (xVel < 0) false else state.facingRight,
-      currentX = (state.currentX * 15 + targetX) / 16)
+      currentX = (state.currentX * 30 + targetX) / 31)
     )
   }
 
@@ -46,9 +46,10 @@ case class VirgilState(x: Double, y: Double, xVel: Double) extends ObjectState[V
     val spriteWidth = 23
     val spriteHeight = 54
 
-    val yWithBob = (450 - props.ds.y) - (spriteHeight * 2) - 30 - 10 * math.sin(props.tick.toDouble / 20)
+    val xWithBob = state.currentX - 10 * math.sin(props.tick.toDouble / 25)
+    val yWithBob = (450 - props.ds.y) - (spriteHeight * 2) - 50 - 10 * math.sin(props.tick.toDouble / 20)
 
-    Group(x = state.currentX, y = yWithBob)(
+    Group(x = xWithBob, y = yWithBob)(
       if (state.danteImage.isDefined) {
         Image(
           image = state.danteImage.get,

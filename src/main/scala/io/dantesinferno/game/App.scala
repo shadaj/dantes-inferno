@@ -21,14 +21,8 @@ object AppCSS extends js.Object
       Stage(width = 800, height = 450)(
         World(WorldState(
           List(
-            VirgilState(
-              x = 0, y = 50, xVel = 0
-            ),
-            DanteState(
-              x = 0, y = 50
-            ),
             StaticBoxState(
-              x = 75, y = 50
+              x = 150, y = 50
             ),
             WallState(
               x = -50
@@ -38,8 +32,15 @@ object AppCSS extends js.Object
             ),
             GroundState(
               y = 0
+            ),
+            VirgilState(
+              x = 0, y = 50, xVel = 0
+            ),
+            DanteState(
+              x = 75, y = 50
             )
-          )
+          ),
+          windowX = -20
         ))
       )
     )
