@@ -4,5 +4,5 @@ import me.shadaj.slinky.core.facade.ReactElement
 
 trait ObjectState[Self <: ObjectState[Self]] {
   def update(worldState: WorldState): Self
-  def render: ReactElement
+  def render(tick: Int): ReactElement
 }

@@ -3,6 +3,9 @@ package io.dantesinferno.game
 import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
 import me.shadaj.slinky.core.facade.ReactElement
+import org.scalajs.dom
+import org.scalajs.dom.html.Image
+import org.scalajs.dom.raw.HTMLImageElement
 
 case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Double, onGround: Boolean) extends CollidingObjectState[DanteState] { self =>
   val collisionGeometry = new CollisionBox[DanteState] {
@@ -39,21 +42,55 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
     )
   }
 
-  override def render: ReactElement = {
-    Dante(this)
+  override def render(tick: Int): ReactElement = {
+    Dante(Dante.Props(this, tick))
   }
 }
 
 @react class Dante extends Component {
-  type Props = DanteState
+  case class Props(ds: DanteState, tick: Int)
+  case class State(danteImage: Option[Image], facingRight: Boolean)
+
+  override def initialState: State = State(None, facingRight = true)
+
+  override def componentDidMount(): Unit = {
+    val image = dom.document.createElement("img").asInstanceOf[HTMLImageElement]
+    image.onload = e => {
+      setState(state.copy(danteImage = Some(image)))
+    }
+
+    image.src = "/dante_2.png"
+  }
+
+  override def componentWillReceiveProps(nextProps: Props): Unit = {
+    import nextProps.ds.xVel
+    setState(state.copy(facingRight = if (xVel > 0) true else if (xVel < 0) false else state.facingRight))
+  }
 
   override def render(): ReactElement = {
-    Group(x = props.x, y = (450 - props.y) - props.collisionGeometry.height)(
-      Rect(
-        x = 0, y = 0,
-        width = props.collisionGeometry.width, height = props.collisionGeometry.height,
-        fill = "yellow"
-      )
+    val spriteWidth = 28
+    val spriteHeight = 54
+
+    Group(x = props.ds.x, y = (450 - props.ds.y) - props.ds.collisionGeometry.height)(
+      if (state.danteImage.isDefined) {
+        Image(
+          image = state.danteImage.get,
+          x = 0, y = 0,
+          width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
+          crop = Some(Crop(
+            x = if (math.abs(props.ds.xVel) > 0.1) spriteWidth * ((props.tick / 5) % 4) else 0,
+            y = if (state.facingRight) 0 else spriteHeight,
+            width = spriteWidth,
+            height = spriteHeight
+          ))
+        )
+      } else {
+        Rect(
+          x = 0, y = 0,
+          width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
+          fill = "yellow"
+        )
+      }
     )
   }
 }

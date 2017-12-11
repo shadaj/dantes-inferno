@@ -16,9 +16,7 @@ case class StaticBoxState(x: Double, y: Double) extends CollidingObjectState[Sta
     override def markOnGround(onGround: Boolean): StaticBoxState = self
   }
 
-  def superUpdate(worldState: WorldState): StaticBoxState = super.update(worldState)
-
-  override def render: ReactElement = {
+  override def render(tick: Int): ReactElement = {
     StaticBox(this)
   }
 }

@@ -2,7 +2,7 @@ package io.dantesinferno.game
 
 import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
-import me.shadaj.slinky.core.facade.ReactElement
+import me.shadaj.slinky.web.html._
 import org.scalajs.dom
 import org.scalajs.dom.raw.KeyboardEvent
 
@@ -17,9 +17,7 @@ object AppCSS extends js.Object
 @js.native
 object ReactLogo extends js.Object
 
-case class WorldState(objects: List[ObjectState[_]], windowX: Double)
-
-
+case class WorldState(objects: List[ObjectState[_]], windowX: Double, tick: Int)
 
 @react class App extends Component {
   type Props = Unit
@@ -36,6 +34,7 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double)
           75, 0
         )
       ),
+      0,
       0
     )
   }
@@ -75,7 +74,8 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double)
         danteState.x - 10
       } else {
         state.windowX
-      }
+      },
+      tick = state.tick + 1
     ))
 
     dom.window.requestAnimationFrame(something => {
@@ -110,9 +110,11 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double)
   }
 
   def render() = {
-    Stage(width = 800, height = 450)(
-      Layer(x = -state.windowX)(
-        state.objects.map(_.render)
+    div(style := js.Dynamic.literal(width = "800px", height = "100vh", marginLeft = "auto", marginRight = "auto", display = "flex", alignItems = "center"))(
+      Stage(width = 800, height = 450)(
+        Layer(x = -state.windowX)(
+          state.objects.map(_.render(state.tick))
+        )
       )
     )
   }

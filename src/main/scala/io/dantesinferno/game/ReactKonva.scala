@@ -2,6 +2,7 @@ package io.dantesinferno.game
 
 import me.shadaj.slinky.core.{ExternalComponent, ExternalComponentNoProps}
 import me.shadaj.slinky.core.annotations.react
+import org.scalajs.dom.html.Image
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
@@ -14,6 +15,7 @@ object ReactKonva extends js.Object {
   val Group: js.Object = js.native
   val Rect: js.Object = js.native
   val Stage: js.Object = js.native
+  val Image: js.Object = js.native
 }
 
 @react object Stage extends ExternalComponent {
@@ -42,4 +44,15 @@ object ReactKonva extends js.Object {
                    fill: js.UndefOr[String] = js.undefined)
 
   override val component: |[String, js.Object] = ReactKonva.Rect
+}
+
+case class Crop(x: Double, y: Double, width: Double, height: Double)
+
+@react object Image extends ExternalComponent {
+  case class Props(image: Image,
+                   x: Double, y: Double,
+                   width: Double, height: Double,
+                   crop: Option[Crop] = None)
+
+  override val component: |[String, js.Object] = ReactKonva.Image
 }
