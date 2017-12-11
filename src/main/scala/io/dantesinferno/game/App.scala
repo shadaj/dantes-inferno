@@ -2,9 +2,10 @@ package io.dantesinferno.game
 
 import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
+import me.shadaj.slinky.core.facade.Fragment
 import me.shadaj.slinky.web.html._
 import org.scalajs.dom
-import org.scalajs.dom.raw.KeyboardEvent
+import org.scalajs.dom.raw.{HTMLCanvasElement, KeyboardEvent}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
@@ -101,6 +102,9 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double, tick: Int)
       onKeyUp(key)
     }
 
+    val canvasContext = dom.document.getElementsByClassName("konvajs-content")(0).firstChild.asInstanceOf[HTMLCanvasElement].getContext("2d")
+    canvasContext.imageSmoothingEnabled = false
+
     animateFrame()
   }
 
@@ -108,21 +112,13 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double, tick: Int)
     props != nextProps || state != nextState
   }
 
-  override def componentDidUpdate(prevProps: Props, prevState: State): Unit = {
-    dom.document.onkeydown = key => {
-      onKeyDown(key)
-    }
-
-    dom.document.onkeyup = key => {
-      onKeyUp(key)
-    }
-  }
-
   def render() = {
     div(style := js.Dynamic.literal(width = "800px", height = "100vh", marginLeft = "auto", marginRight = "auto", display = "flex", alignItems = "center"))(
       Stage(width = 800, height = 450)(
         Layer(x = -state.windowX)(
-          state.objects.map(_.render(state.tick))
+          state.objects.zipWithIndex.map { case (obj, index) =>
+            Fragment.withKey(index.toString)(obj.render(state.tick))
+          }
         )
       )
     )

@@ -11,8 +11,8 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
   val collisionGeometry = new CollisionBox[DanteState] {
     override def left: Double = x
     override def bottom: Double = y
-    override def right: Double = x + 50
-    override def top: Double = y + 100
+    override def right: Double = x + (28 * 2)
+    override def top: Double = y + (56 * 2)
 
     override def state = self
 
