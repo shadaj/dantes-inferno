@@ -2,14 +2,15 @@ package io.dantesinferno.game
 
 import me.shadaj.slinky.core.Component
 import me.shadaj.slinky.core.annotations.react
-import me.shadaj.slinky.core.facade.ReactElement
+import me.shadaj.slinky.core.facade.{Fragment, ReactElement}
 import org.scalajs.dom
 import org.scalajs.dom.html.Image
 import org.scalajs.dom.raw.HTMLImageElement
 
 case class DanteState(x: Double, y: Double,
                       yVel: Double = 0, xVel: Double = 0,
-                      xAcc: Double = 0,onGround: Boolean = true) extends CollidingObjectState[DanteState] { self =>
+                      xAcc: Double = 0,onGround: Boolean = true,
+                      currentQuote: Option[String] = None) extends CollidingObjectState[DanteState] with WithQuotes[DanteState] { self =>
   val collisionGeometry = new CollisionBox[DanteState] {
     override def left: Double = x
     override def bottom: Double = y
@@ -32,6 +33,8 @@ case class DanteState(x: Double, y: Double,
   }
 
   def superUpdate(worldState: WorldState): DanteState = super.update(worldState)
+
+  override def setQuote(quote: Option[String]): DanteState = copy(currentQuote = quote)
 
   override def update(worldState: WorldState): DanteState = {
     val superUpdated = super.update(worldState)
@@ -92,7 +95,16 @@ case class DanteState(x: Double, y: Double,
           width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
           fill = "yellow"
         )
-      }
+      },
+      props.ds.currentQuote.map { quote =>
+        Text(
+          x = 20, y = -50,
+          width = 300,
+          text = quote,
+          fontSize = 20, fontFamily = "Times",
+          fill = "black"
+        ): ReactElement
+      }.getOrElse(Fragment())
     )
   }
 }

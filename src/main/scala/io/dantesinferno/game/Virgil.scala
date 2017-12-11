@@ -7,10 +7,14 @@ import org.scalajs.dom
 import org.scalajs.dom.html.Image
 import org.scalajs.dom.raw.HTMLImageElement
 
-case class VirgilState(x: Double, y: Double, xVel: Double, remainingQuotes: List[String]) extends ObjectState[VirgilState] { self =>
+case class VirgilState(x: Double, y: Double, xVel: Double, currentQuote: Option[String] = None) extends ObjectState[VirgilState] with WithQuotes[VirgilState] { self =>
   override def update(worldState: WorldState): VirgilState = {
     val danteLocation =  worldState.objects.find(_.isInstanceOf[DanteState]).get.asInstanceOf[DanteState]
     self.copy(x = (x * 15 + danteLocation.x) / 16, y = (y * 15 + danteLocation.y) / 16, xVel = danteLocation.xVel)
+  }
+
+  override def setQuote(quote: Option[String]): VirgilState = {
+    copy(currentQuote = quote)
   }
 
   override def render(tick: Int, windowX: Double): ReactElement = {
@@ -47,7 +51,8 @@ case class VirgilState(x: Double, y: Double, xVel: Double, remainingQuotes: List
     val spriteHeight = 54
 
     val xWithBob = state.currentX - 10 * math.sin(props.tick.toDouble / 25)
-    val yWithBob = (450 - props.ds.y) - (spriteHeight * 2) - 50 - 10 * math.sin(props.tick.toDouble / 20)
+    val yWithoutBob = (450 - props.ds.y) - (spriteHeight * 2) - 50
+    val yWithBob = yWithoutBob + 10 * math.sin(props.tick.toDouble / 20)
 
     Group(x = xWithBob, y = yWithBob)(
       if (state.danteImage.isDefined) {
@@ -69,13 +74,13 @@ case class VirgilState(x: Double, y: Double, xVel: Double, remainingQuotes: List
           fill = "yellow"
         )
       },
-      props.ds.remainingQuotes.headOption.map { quote =>
+      props.ds.currentQuote.map { quote =>
         Text(
-          x = -xWithBob + props.windowX, y = -yWithBob,
-          width = 800,
+          x = -xWithBob + state.currentX + 20, y = -yWithBob + yWithoutBob - 50,
+          width = 300,
           text = quote,
           fontSize = 20, fontFamily = "Times",
-          align = "center", fill = "black"
+          fill = "black"
         ): ReactElement
       }.getOrElse(Fragment())
     )

@@ -10,7 +10,10 @@ import org.scalajs.dom.raw.{HTMLCanvasElement, KeyboardEvent}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
-case class WorldState(objects: List[ObjectState[_]], windowX: Double = 0, tick: Int = 0)
+case class WorldState(objects: List[ObjectState[_]],
+                      queuedQuotes: List[(Class[_], String)],
+                      windowX: Double = 0, tick: Int = 0,
+                      currentQuote: Option[(Class[_], String)] = None)
 
 @react class World extends Component {
   type Props = WorldState
@@ -18,7 +21,27 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double = 0, tick: 
   type State = WorldState
 
   override def initialState: State = {
-    props
+    if (props.queuedQuotes.nonEmpty) {
+      props.copy(
+        objects = props.objects.map { obj =>
+          if (props.currentQuote.exists(_._1.isInstance(obj))) {
+            obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
+          } else {
+            obj
+          }
+        }.map { obj =>
+          if (props.queuedQuotes.head._1.isInstance(obj)) {
+            obj.asInstanceOf[WithQuotes[_]].setQuote(Some(props.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
+          } else {
+            obj
+          }
+        },
+        queuedQuotes = props.queuedQuotes.tail,
+        currentQuote = Some(props.queuedQuotes.head)
+      )
+    } else {
+      props
+    }
   }
 
   private val css = AppCSS
@@ -37,19 +60,47 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double = 0, tick: 
   def onKeyDown(key: KeyboardEvent): Unit = {
     key.key match {
       case "ArrowRight" =>
-        if (virgilState.remainingQuotes.nonEmpty) {
-          setState(updateVirgilState(_.copy(remainingQuotes = virgilState.remainingQuotes.tail)))
+        if (state.queuedQuotes.nonEmpty) {
+          setState(state.copy(
+            objects = state.objects.map { obj =>
+              if (state.currentQuote.exists(_._1.isInstance(obj))) {
+                obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
+              } else {
+                obj
+              }
+            }.map { obj =>
+              if (state.queuedQuotes.head._1.isInstance(obj)) {
+                obj.asInstanceOf[WithQuotes[_]].setQuote(Some(state.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
+              } else {
+                obj
+              }
+            },
+            queuedQuotes = state.queuedQuotes.tail,
+            currentQuote = Some(state.queuedQuotes.head)
+          ))
+        } else if (state.currentQuote.isDefined) {
+          setState(state.copy(
+            objects = state.objects.map { obj =>
+              if (state.currentQuote.exists(_._1.isInstance(obj))) {
+                obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
+              } else {
+                obj
+              }
+            },
+            queuedQuotes = List.empty,
+            currentQuote = None
+          ))
         } else {
           setState(updateDanteState(_.copy(xAcc = 2)))
         }
       case "ArrowLeft" =>
-        if (virgilState.remainingQuotes.nonEmpty) {
+        if (state.currentQuote.isDefined) {
         } else {
           setState(updateDanteState(_.copy(xAcc = -2)))
         }
 
       case "ArrowUp" =>
-        if (virgilState.remainingQuotes.nonEmpty) {
+        if (state.currentQuote.isDefined) {
         } else if (danteState.onGround) {
           setState(updateDanteState(_.copy(yVel = 20)))
         }

@@ -34,12 +34,15 @@ object AppCSS extends js.Object
               y = 0
             ),
             VirgilState(
-              x = 0, y = 50, xVel = 0,
-              remainingQuotes = List("lol", "wow", "amaze")
+              x = 0, y = 50, xVel = 0
             ),
             DanteState(
               x = 75, y = 50
             )
+          ),
+          queuedQuotes = List(
+            classOf[VirgilState] -> "This is the entrance to the amaze amaze canto amaze canto amaze",
+            classOf[DanteState] -> "Hello I am dante lolz"
           ),
           windowX = -20
         ))
