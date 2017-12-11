@@ -9,7 +9,7 @@ case class GroundState(y: Double) extends CollidingObjectState[GroundState] { se
     override def left: Double = -1000000D
     override def bottom: Double = y
     override def right: Double = 1000000D
-    override def top: Double = y + 50
+    override def top: Double = y + 200
 
     override def state = self
     override def transform(newLeft: Double, newBottom: Double): GroundState = self

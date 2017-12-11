@@ -21,6 +21,10 @@ object AppCSS extends js.Object
       Stage(width = 800, height = 450)(
         World(WorldState(
           List(
+            MinotaurState(
+              x = 350,
+              y = 50
+            ),
             StaticBoxState(
               x = 150, y = 50
             ),
@@ -28,10 +32,10 @@ object AppCSS extends js.Object
               x = -200
             ),
             WallState(
-              x = 1000
+              x = 1500
             ),
             GroundState(
-              y = 0
+              y = 50 - 200
             ),
             VirgilState(
               x = 0, y = 50, xVel = 0
