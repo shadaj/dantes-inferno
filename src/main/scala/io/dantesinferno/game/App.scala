@@ -33,6 +33,12 @@ case class WorldState(objects: List[ObjectState[_]], windowX: Double, tick: Int)
         StaticBoxState(
           75, 50
         ),
+        WallState(
+          x = -50
+        ),
+        WallState(
+          x = 1000
+        ),
         GroundState(
           0
         )

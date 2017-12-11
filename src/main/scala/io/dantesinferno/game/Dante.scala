@@ -20,7 +20,7 @@ case class DanteState(x: Double, y: Double, yVel: Double, xVel: Double, xAcc: Do
       copy(
         x = newLeft,
         y = newBottom,
-        yVel = if (yVel < 0 && newBottom >= bottom) 0 else yVel
+        yVel = if (yVel < 0 && newBottom > bottom) 0 else yVel
       )
     }
 

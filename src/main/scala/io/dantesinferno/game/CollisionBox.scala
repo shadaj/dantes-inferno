@@ -18,19 +18,20 @@ trait CollisionBox[Self <: CollidingObjectState[Self]] extends CollisionGeometry
         var afterCollision = state
         def myGeometry = afterCollision.collisionGeometry.asInstanceOf[CollisionBox[Self]]
 
+        def significantlyIntersectsX = myGeometry.left + 5 < otherBox.right && myGeometry.right - 5 > otherBox.left
         def intersectsX = myGeometry.left < otherBox.right && myGeometry.right > otherBox.left
         def intersectsY = myGeometry.bottom < otherBox.top && myGeometry.top > otherBox.bottom
 
-        if ((myGeometry.left + 5 < otherBox.right && myGeometry.right - 5 > otherBox.left) && intersectsY && myGeometry.bottom > otherBox.bottom) {
+        if (significantlyIntersectsX && intersectsY && myGeometry.bottom > otherBox.bottom) {
           afterCollision = transform(myGeometry.left, otherBox.top)
           afterCollision = myGeometry.markOnGround(true)
         }
 
-        if ((myGeometry.left + 5 < otherBox.right && myGeometry.right - 5 > otherBox.left) && myGeometry.bottom <= otherBox.top && myGeometry.top > otherBox.bottom) {
+        if (significantlyIntersectsX && myGeometry.bottom <= otherBox.top && myGeometry.top > otherBox.bottom) {
           afterCollision = myGeometry.markOnGround(true)
         }
 
-        if (intersectsX && intersectsY && myGeometry.top < otherBox.top) {
+        if (significantlyIntersectsX && intersectsY && myGeometry.top < otherBox.top) {
           afterCollision = transform(myGeometry.left, otherBox.bottom - myGeometry.height)
         }
 
