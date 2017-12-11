@@ -11,7 +11,8 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
 case class WorldState(objects: List[ObjectState[_]],
-                      queuedQuotes: List[(Class[_], String)],
+                      triggeredQuotes: List[(Double, List[(Class[_], String)])],
+                      queuedQuotes: List[(Class[_], String)] = List.empty,
                       windowX: Double = 0, tick: Int = 0,
                       currentQuote: Option[(Class[_], String)] = None)
 
@@ -21,27 +22,7 @@ case class WorldState(objects: List[ObjectState[_]],
   type State = WorldState
 
   override def initialState: State = {
-    if (props.queuedQuotes.nonEmpty) {
-      props.copy(
-        objects = props.objects.map { obj =>
-          if (props.currentQuote.exists(_._1.isInstance(obj))) {
-            obj.asInstanceOf[WithQuotes[_]].setQuote(None).asInstanceOf[ObjectState[_]]
-          } else {
-            obj
-          }
-        }.map { obj =>
-          if (props.queuedQuotes.head._1.isInstance(obj)) {
-            obj.asInstanceOf[WithQuotes[_]].setQuote(Some(props.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
-          } else {
-            obj
-          }
-        },
-        queuedQuotes = props.queuedQuotes.tail,
-        currentQuote = Some(props.queuedQuotes.head)
-      )
-    } else {
-      props
-    }
+    props
   }
 
   private val css = AppCSS
@@ -119,15 +100,41 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def animateFrame(): Unit = {
-    setState(state.copy(
-      objects = state.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
-      windowX = if (danteState.x > state.windowX + (800 - 10 - 50)) {
-        danteState.x - (800 - 10 - 50)
-      } else if (danteState.x < state.windowX + 10) {
-        danteState.x - 10
-      } else {
-        state.windowX
-      },
+    val newWindow = if (danteState.x > state.windowX + (800 - 10 - 50)) {
+      danteState.x - (800 - 10 - 50)
+    } else if (danteState.x < state.windowX + 10) {
+      danteState.x - 10
+    } else {
+      state.windowX
+    }
+
+    val stateQueuedQuotesUpdated = if (state.triggeredQuotes.headOption.exists(danteState.x >= _._1)) {
+      state.copy(
+        queuedQuotes = state.queuedQuotes ++ state.triggeredQuotes.head._2,
+        triggeredQuotes = state.triggeredQuotes.tail
+      )
+    } else state
+
+    val stateQuotesUpdated = if (stateQueuedQuotesUpdated.queuedQuotes.nonEmpty && stateQueuedQuotesUpdated.currentQuote.isEmpty) {
+      stateQueuedQuotesUpdated.copy(
+        objects = stateQueuedQuotesUpdated.objects.map { obj =>
+          if (stateQueuedQuotesUpdated.queuedQuotes.head._1.isInstance(obj)) {
+            obj.asInstanceOf[WithQuotes[_]].setQuote(Some(stateQueuedQuotesUpdated.queuedQuotes.head._2)).asInstanceOf[ObjectState[_]]
+          } else {
+            obj
+          }
+        }.map {
+          case s: DanteState => s.copy(xAcc = 0, xVel = 0)
+          case o => o
+        },
+        queuedQuotes = stateQueuedQuotesUpdated.queuedQuotes.tail,
+        currentQuote = Some(stateQueuedQuotesUpdated.queuedQuotes.head)
+      )
+    } else state
+
+    setState(stateQuotesUpdated.copy(
+      objects = stateQuotesUpdated.objects.map(_.update(state).asInstanceOf[ObjectState[_]]),
+      windowX = newWindow,
       tick = state.tick + 1
     ))
 

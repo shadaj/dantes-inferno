@@ -40,9 +40,11 @@ object AppCSS extends js.Object
               x = 75, y = 50
             )
           ),
-          queuedQuotes = List(
-            classOf[VirgilState] -> "This is the entrance to the amaze amaze canto amaze canto amaze",
-            classOf[DanteState] -> "Hello I am dante lolz"
+          triggeredQuotes = List(
+            0D -> List(
+              classOf[VirgilState] -> "This is the entrance to the amaze amaze canto amaze canto amaze",
+              classOf[DanteState] -> "Hello I am dante lolz"
+            )
           ),
           windowX = -20
         ))
