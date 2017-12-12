@@ -76,7 +76,7 @@ case class VirgilState(x: Double, y: Double, xVel: Double, currentQuote: Option[
       },
       props.ds.currentQuote.map { quote =>
         Text(
-          x = -xWithBob + state.currentX + spriteWidth * 2, y = -yWithBob + yWithoutBob,
+          x = -xWithBob + state.currentX + spriteWidth * 2, y = -yWithBob + yWithoutBob - 10,
           width = 200,
           text = quote,
           fontSize = 20, fontFamily = "Times",

@@ -138,14 +138,14 @@ object AppCSS extends js.Object
               ("VirgilState", "Dante, be vigilant, there is a Minotaur somewhere here.", None, None)
             ),
             2650D -> List(
-              ("MinotaurState", "ROAR ROAR ROAR", Some(28 * 50 + 500D), Some(4000)),
+              ("MinotaurState", "ROAR ROAR ROAR", Some(28 * 50 + 500D), Some(3000)),
               ("DanteState", "What's that?", Some(2300D), Some(2000)),
-              ("VirgilState", "It's the minotaur!", Some(2300D), Some(4000)),
-              ("VirgilState", "Some people think it's a man with a bull's head", Some(2300D), Some(4000)),
-              ("VirgilState", "but it's actually a bull with a man's head!", Some(2300D), Some(4000)),
-              ("DanteState", "He is \"[biting] himself in rage like one insane.\" (12)", Some(2300D), Some(5000)),
-              ("VirgilState", "Stop quoting yourself and run!", Some(2300D), Some(4000)),
-              ("VirgilState", "\"Go quickly, while he's raging.\" (22)", Some(2300D), Some(6000))
+              ("VirgilState", "It's the minotaur!", Some(2300D), Some(2000)),
+              ("VirgilState", "Some people think it's a man with a bull's head", Some(2300D), Some(3000)),
+              ("VirgilState", "but it's actually a bull with a man's head!", Some(2300D), Some(3000)),
+              ("DanteState", "He is \"[biting] himself in rage like one insane.\" (12)", Some(2300D), Some(3000)),
+              ("VirgilState", "Stop quoting yourself and run!", Some(2300D), Some(2000)),
+              ("VirgilState", "\"Go quickly, while he's raging.\" (22)", Some(2300D), Some(3000))
             ),
             3600D -> List(
               ("MinotaurState", "ROAR ROAR ROAR", Some(3000D), Some(2000)),
@@ -198,8 +198,8 @@ object AppCSS extends js.Object
               ("DanteState", "Jing-Chen Peng", None, Some(3000)),
               ("DanteState", "and Shadaj Laddad", None, Some(3000)),
               ("DanteState", "Art custom designed by Jing-Chen", None, Some(3000)),
-              ("DanteState", "Game mechanics implemented by Shadaj", None, Some(3000)),
-              ("DanteState", "Designed and coded in under two weeks", None, Some(3000)),
+              ("DanteState", "Game physics and mechanics implemented by Shadaj", None, Some(3000)),
+              ("DanteState", "Designed and coded from scratch in under one weeks", None, Some(3000)),
               ("DanteState", "With over 2,500 lines of code", None, Some(3000)),
               ("DanteState", "And dozens of individual animation frames", None, Some(3000)),
               ("DanteState", "Thanks for playing!", None, Some(3000))
