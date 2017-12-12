@@ -42,10 +42,7 @@ object AppCSS extends js.Object
         World(WorldState(
           List(
             BackdropState(
-              x = 0, y = 0, width = 7750, height = 3000
-            ),
-            RiverOfBloodBackdropState(
-              x = 7750, y = 0, width = 2250, height = 3000
+              x = 0, y = 0, width = 10000, height = 3000
             ),
             MinotaurState(
               x = 28 * 50,
@@ -78,30 +75,33 @@ object AppCSS extends js.Object
               y = 500, x = 3400, width = 4600
             ),
             ChironState(
-              x = 7300,
+              x = 7100,
               y = 500
             ),
             CentaurState(
-              x = 5600,
+              x = 5400,
               y = 500,
-              spawnDantePosition = 6500,
-              stopMovingDantePosition = 7000,
-              relaxDantePosition = 7000
+              spawnDantePosition = 6300,
+              stopMovingDantePosition = 6800,
+              relaxDantePosition = 6800
+            ),
+            CentaurState(
+              x = 5500,
+              y = 500,
+              spawnDantePosition = 6300,
+              stopMovingDantePosition = 6800,
+              relaxDantePosition = 6800
             ),
             CentaurState(
               x = 5700,
               y = 500,
-              spawnDantePosition = 6500,
-              stopMovingDantePosition = 7000,
-              relaxDantePosition = 7000
-            ),
-            CentaurState(
-              x = 5900,
-              y = 500,
-              spawnDantePosition = 6500,
+              spawnDantePosition = 6300,
               stopMovingDantePosition = 1000000000,
-              relaxDantePosition = 7000,
+              relaxDantePosition = 6800,
               talks = true
+            ),
+            RiverOfBloodBackdropState(
+              x = 7360, y = 260
             )
           ) ++
             genStairs(8000, 0, List(
@@ -163,7 +163,7 @@ object AppCSS extends js.Object
               ("DanteState", "I just ate", Some(3600D), Some(3000)),
               ("VirgilState", "Want some blood noodles with blood soup?", Some(3600D), Some(4000))
             ),
-            6500D -> List(
+            6300D -> List(
               ("CentaurState", "Watcha doin mate", Some(5800D), Some(3000)),
               ("VirgilState", "Take us to Chiron", Some(6000D), Some(3000)),
               ("CentaurState", "ok", Some(5800D), Some(3000)),
@@ -171,7 +171,7 @@ object AppCSS extends js.Object
               ("DanteState", "Figured. When can I go home?", Some(6000D), Some(3000)),
               ("VirgilState", "Already? You've still got 88 Cantos to go!", Some(6000D), Some(3000))
             ),
-            7200D -> List(
+            7000D -> List(
               ("VirgilState", "This is the great Chiron, another centaur.", Some(6800D), Some(3000)),
               ("VirgilState", "\"They circle the // The moat by thousands\" (66).", Some(6800D), Some(3000)),
               ("ChironState", "Hello Virgil and Dante.", Some(6800D), Some(3000)),
