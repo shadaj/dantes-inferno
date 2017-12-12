@@ -20,7 +20,7 @@ object ReactKonva extends js.Object {
 }
 
 @react object Stage extends ExternalComponent {
-  case class Props(width: Int, height: Int)
+  case class Props(width: Double, height: Double, scaleX: Double, scaleY: Double)
 
   override val component: |[String, js.Object] = ReactKonva.Stage
 }
@@ -42,7 +42,9 @@ object ReactKonva extends js.Object {
 @react object Rect extends ExternalComponent {
   case class Props(x: Double, y: Double,
                    width: Double, height: Double,
-                   fill: js.UndefOr[String] = js.undefined)
+                   fill: js.UndefOr[String] = js.undefined,
+                   fillPatternImage: js.UndefOr[Image] = js.undefined,
+                   fillPatternRepeat: js.UndefOr[String] = js.undefined)
 
   override val component: |[String, js.Object] = ReactKonva.Rect
 }

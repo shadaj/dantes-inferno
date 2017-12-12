@@ -102,7 +102,7 @@ case class DanteState(x: Double, y: Double,
           width = 300,
           text = quote,
           fontSize = 20, fontFamily = "Times",
-          fill = "black"
+          fill = "white"
         ): ReactElement
       }.getOrElse(Fragment()),
       if (false) {
@@ -113,7 +113,7 @@ case class DanteState(x: Double, y: Double,
           width = 300,
           text = props.ds.x.toString,
           fontSize = 20, fontFamily = "Times",
-          fill = "black"
+          fill = "white"
         ): ReactElement
       }
     )

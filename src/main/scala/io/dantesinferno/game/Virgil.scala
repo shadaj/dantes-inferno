@@ -9,7 +9,7 @@ import org.scalajs.dom.raw.HTMLImageElement
 
 case class VirgilState(x: Double, y: Double, xVel: Double, currentQuote: Option[String] = None) extends ObjectState[VirgilState] with WithQuotes[VirgilState] { self =>
   override def update(worldState: WorldState): VirgilState = {
-    val danteLocation =  worldState.objects.find(_.isInstanceOf[DanteState]).get.asInstanceOf[DanteState]
+    val danteLocation = worldState.objects.find(_.isInstanceOf[DanteState]).get.asInstanceOf[DanteState]
     self.copy(x = (x * 15 + danteLocation.x) / 16, y = (y * 15 + danteLocation.y) / 16, xVel = danteLocation.xVel)
   }
 
@@ -80,7 +80,7 @@ case class VirgilState(x: Double, y: Double, xVel: Double, currentQuote: Option[
           width = 300,
           text = quote,
           fontSize = 20, fontFamily = "Times",
-          fill = "black"
+          fill = "white"
         ): ReactElement
       }.getOrElse(Fragment())
     )

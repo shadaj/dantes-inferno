@@ -123,7 +123,7 @@ case class MinotaurState(x: Double, y: Double,
               width = 300,
               text = quote,
               fontSize = 20, fontFamily = "Times",
-              fill = "black"
+              fill = "white"
             ): ReactElement
           }.getOrElse(Fragment())
         )
