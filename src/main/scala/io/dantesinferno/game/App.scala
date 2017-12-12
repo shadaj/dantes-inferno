@@ -48,10 +48,12 @@ object AppCSS extends js.Object
               y = 500, x = 0, width = 28 * 50 + 2000
             ),
             WallState(
-              x = -200
+              left = -200,
+              right = 0
             ),
             WallState(
-              x = 28 * 50 + 2000
+              left = 3400,
+              right = 3600
             ),
             GroundState(
               y = 0
@@ -68,7 +70,10 @@ object AppCSS extends js.Object
               ("VirgilState" ,"This is the entrance to the amaze amaze canto amaze canto amaze", Some(0D), None),
               ("DanteState", "Hello I am dante lolz", Some(0D), None)
             ),
-            (28 * 50 + 1250D) -> List(
+            1500D -> List(
+              ("VirgilState", "WOW I AM INTRODUCING THE MINOTAUR", None, None)
+            ),
+            2650D -> List(
               ("MinotaurState", "HADLFJLAKSDJFKLADSJF", Some(28 * 50 + 500D), Some(4000)),
               ("VirgilState", "Run Dante! For here comes the Minotaur!", None, Some(3000))
             )

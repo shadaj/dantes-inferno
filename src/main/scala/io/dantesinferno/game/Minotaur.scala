@@ -102,7 +102,7 @@ case class MinotaurState(x: Double, y: Double,
               x = 0, y = 0,
               width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
               crop = Some(Crop(
-                x = if (state.moving) spriteWidth * ((props.tick / 5) % 4) else 0,
+                x = if (state.moving) spriteWidth * ((props.tick / 10) % 4) else 0,
                 y = if (state.facingRight) 0 else spriteHeight,
                 width = spriteWidth,
                 height = spriteHeight

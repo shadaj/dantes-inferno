@@ -98,13 +98,24 @@ case class DanteState(x: Double, y: Double,
       },
       props.ds.currentQuote.map { quote =>
         Text(
-          x = 20, y = -50,
+          x = 20, y = -25,
           width = 300,
           text = quote,
           fontSize = 20, fontFamily = "Times",
           fill = "black"
         ): ReactElement
-      }.getOrElse(Fragment())
+      }.getOrElse(Fragment()),
+      if (false) {
+        Fragment()
+      } else {
+        Text(
+          x = 20, y = 25,
+          width = 300,
+          text = props.ds.x.toString,
+          fontSize = 20, fontFamily = "Times",
+          fill = "black"
+        ): ReactElement
+      }
     )
   }
 }
