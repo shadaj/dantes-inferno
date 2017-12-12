@@ -75,37 +75,34 @@ object AppCSS extends js.Object
               y = 500, x = 3400, width = 4600
             ),
             ChironState(
-              x = 7100,
+              x = 7300,
               y = 500
-            ),
-            CentaurState(
-              x = 5400,
-              y = 500,
-              spawnDantePosition = 6300,
-              stopMovingDantePosition = 6800,
-              relaxDantePosition = 6800
             ),
             CentaurState(
               x = 5500,
               y = 500,
-              spawnDantePosition = 6300,
-              stopMovingDantePosition = 6800,
-              relaxDantePosition = 6800
+              spawnDantePosition = 6500,
+              stopMovingDantePosition = 7000,
+              relaxDantePosition = 7000
             ),
             CentaurState(
               x = 5700,
               y = 500,
-              spawnDantePosition = 6300,
-              stopMovingDantePosition = 1000000000,
-              relaxDantePosition = 6800,
-              talks = true
+              spawnDantePosition = 6500,
+              stopMovingDantePosition = 7000,
+              relaxDantePosition = 7000
             ),
-            RiverOfBloodBackdropState(
-              x = 7360, y = 260
+            CentaurState(
+              x = 5900,
+              y = 500,
+              spawnDantePosition = 6500,
+              stopMovingDantePosition = 1000000000,
+              relaxDantePosition = 7000,
+              talks = true
             )
           ) ++
-            genStairs(8000, 0, List(
-              50, 50, 50, 49, 48, 47, 46, 45, 44,
+            genStairs(8200, 0, List(
+              48, 47, 46, 45, 44,
               40, 40, 40, 40, 40,
               30, 30, 30, 30, 30, 30, 29, 28, 27, 26, 25,
               21, 20,
@@ -128,6 +125,9 @@ object AppCSS extends js.Object
             ),
             VirgilState(
               x = 0, y = 1500, xVel = 0
+            ),
+            RiverOfBloodBackdropState(
+              x = 7560, y = 260
             )
           ),
           triggeredQuotes = List(
@@ -163,7 +163,7 @@ object AppCSS extends js.Object
               ("DanteState", "I just ate", Some(3600D), Some(3000)),
               ("VirgilState", "Want some blood noodles with blood soup?", Some(3600D), Some(4000))
             ),
-            6300D -> List(
+            6500D -> List(
               ("CentaurState", "Watcha doin mate", Some(5800D), Some(3000)),
               ("VirgilState", "Take us to Chiron", Some(6000D), Some(3000)),
               ("CentaurState", "ok", Some(5800D), Some(3000)),
@@ -171,7 +171,7 @@ object AppCSS extends js.Object
               ("DanteState", "Figured. When can I go home?", Some(6000D), Some(3000)),
               ("VirgilState", "Already? You've still got 88 Cantos to go!", Some(6000D), Some(3000))
             ),
-            7000D -> List(
+            7200D -> List(
               ("VirgilState", "This is the great Chiron, another centaur.", Some(6800D), Some(3000)),
               ("VirgilState", "\"They circle the // The moat by thousands\" (66).", Some(6800D), Some(3000)),
               ("ChironState", "Hello Virgil and Dante.", Some(6800D), Some(3000)),
