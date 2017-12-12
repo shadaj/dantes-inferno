@@ -7,7 +7,7 @@ import org.scalajs.dom
 import org.scalajs.dom.html.Image
 import org.scalajs.dom.raw.HTMLImageElement
 
-case class BackdropState(x: Double, y: Double, width: Double, height: Double, url: String) extends ObjectState[BackdropState] { self =>
+case class BackdropState(x: Double, y: Double, width: Double, height: Double) extends ObjectState[BackdropState] { self =>
   override def update(worldState: WorldState): BackdropState = self
 
   override def render(tick: Int, windowX: Double): ReactElement = {
@@ -27,7 +27,7 @@ case class BackdropState(x: Double, y: Double, width: Double, height: Double, ur
       setState(state.copy(danteImage = Some(image)))
     }
 
-    image.src = props.url
+    image.src = "/backdrop_brown.png"
   }
 
   override def render(): ReactElement = {

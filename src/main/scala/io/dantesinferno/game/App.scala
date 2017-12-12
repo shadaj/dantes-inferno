@@ -42,10 +42,10 @@ object AppCSS extends js.Object
         World(WorldState(
           List(
             BackdropState(
-              x = 0, y = 0, width = 7750, height = 3000, url = "/backdrop_brown.png"
+              x = 0, y = 0, width = 7750, height = 3000
             ),
-            BackdropState(
-              x = 7750, y = 0, width = 2250, height = 3000, url = "/backdrop_riverofblood.png"
+            RiverOfBloodBackdropState(
+              x = 7750, y = 0, width = 2250, height = 3000
             ),
             MinotaurState(
               x = 28 * 50,
