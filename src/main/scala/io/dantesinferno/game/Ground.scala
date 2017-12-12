@@ -7,9 +7,9 @@ import me.shadaj.slinky.core.facade.ReactElement
 case class GroundState(y: Double, x: Double = -1000000D, width: Double = 2000000D) extends CollidingObjectState[GroundState] { self =>
   val collisionGeometry = new CollisionBox[GroundState] {
     override def left: Double = -1000000D
-    override def bottom: Double = y
+    override def bottom: Double = y - 200
     override def right: Double = 1000000D
-    override def top: Double = y + 200
+    override def top: Double = y
 
     override def state = self
     override def transform(newLeft: Double, newBottom: Double): GroundState = self
@@ -25,7 +25,7 @@ case class GroundState(y: Double, x: Double = -1000000D, width: Double = 2000000
   type Props = GroundState
 
   override def render(): ReactElement = {
-    Group(x = -1000000D, y = (450 - props.y) - props.collisionGeometry.height)(
+    Group(x = -1000000D, y = 450 - props.y)(
       Rect(
         x = 0, y = 0,
         width = props.collisionGeometry.width, height = props.collisionGeometry.height,

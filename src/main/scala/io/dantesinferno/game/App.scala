@@ -33,7 +33,7 @@ object AppCSS extends js.Object
             MinotaurState(
               x = 28 * 50,
               spawnDantePosition = 28 * 50 + 1250,
-              y = 550
+              y = 500
             )
           ) ++
             genStairs(0, 500, List(
@@ -41,7 +41,7 @@ object AppCSS extends js.Object
               40, 40, 40, 40, 40,
               30, 30, 30, 30, 30, 30, 31, 32, 33, 34, 35,
               21, 20,
-              10
+              10 // 28 blocks wide
             ))
           ++ List(
             GroundState(
@@ -64,16 +64,17 @@ object AppCSS extends js.Object
             )
           ),
           triggeredQuotes = List(
-            250D -> List(
-              ("VirgilState" ,"This is the entrance to the amaze amaze canto amaze canto amaze", Some(150D), None),
-              ("DanteState", "Hello I am dante lolz", Some(150D), None)
+            75D -> List(
+              ("VirgilState" ,"This is the entrance to the amaze amaze canto amaze canto amaze", Some(0D), None),
+              ("DanteState", "Hello I am dante lolz", Some(0D), None)
             ),
             (28 * 50 + 1250D) -> List(
               ("MinotaurState", "HADLFJLAKSDJFKLADSJF", Some(28 * 50 + 500D), Some(4000)),
               ("VirgilState", "Run Dante! For here comes the Minotaur!", None, Some(3000))
             )
           ),
-          windowX = -20
+          windowX = -20,
+          windowY = 800
         ))
       )
     )

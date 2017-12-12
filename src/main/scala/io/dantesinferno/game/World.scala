@@ -26,7 +26,10 @@ case class WorldState(objects: List[ObjectState[_]],
   type State = WorldState
 
   override def initialState: State = {
-    props
+    props.copy(
+      animatingWindowX = props.windowX,
+      animatingWindowY = props.windowY
+    )
   }
 
   private val css = AppCSS
@@ -77,26 +80,28 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def onKeyDown(key: KeyboardEvent): Unit = {
-    val quoteAllowsMove = state.currentQuote.isEmpty || state.currentQuote.exists(_._1._3.isEmpty)
+    if (!key.repeat) {
+      val quoteAllowsMove = state.currentQuote.isEmpty || state.currentQuote.exists(_._1._3.isEmpty)
 
-    key.key match {
-      case "ArrowRight" =>
-        if ((state.queuedQuotes.nonEmpty || state.currentQuote.isDefined) && state.currentQuote.get._1._4.isEmpty) {
-          setState(stateWithQuoteAdvanced(state))
-        } else if (quoteAllowsMove) {
-          setState(updateDanteState(_.copy(xAcc = 2)))
-        }
-      case "ArrowLeft" =>
-        if (quoteAllowsMove) {
-          setState(updateDanteState(_.copy(xAcc = -2)))
-        }
+      key.key match {
+        case "ArrowRight" =>
+          if ((state.queuedQuotes.nonEmpty || state.currentQuote.isDefined) && state.currentQuote.get._1._4.isEmpty) {
+            setState(stateWithQuoteAdvanced(state))
+          } else if (quoteAllowsMove) {
+            setState(updateDanteState(_.copy(xAcc = 2)))
+          }
+        case "ArrowLeft" =>
+          if (quoteAllowsMove) {
+            setState(updateDanteState(_.copy(xAcc = -2)))
+          }
 
-      case "ArrowUp" =>
-        if (quoteAllowsMove && danteState.onGround) {
-          setState(updateDanteState(_.copy(yVel = 20)))
-        }
+        case "ArrowUp" =>
+          if (quoteAllowsMove && danteState.onGround) {
+            setState(updateDanteState(_.copy(yVel = 20)))
+          }
 
-      case o => println(s"Unhandled key! $o")
+        case o => println(s"Unhandled key! $o")
+      }
     }
   }
 
@@ -195,7 +200,7 @@ case class WorldState(objects: List[ObjectState[_]],
   }
 
   def render() = {
-    Layer(x = -state.animatingWindowX, y = state.windowY)(
+    Layer(x = -state.animatingWindowX, y = state.animatingWindowY)(
       state.objects.zipWithIndex.map { case (obj, index) =>
         Fragment.withKey(index.toString)(obj.render(state.tick, state.windowX))
       }
