@@ -85,18 +85,18 @@ case class WorldState(objects: List[ObjectState[_]],
 
       key.key match {
         case "ArrowRight" =>
-//          if ((state.queuedQuotes.nonEmpty || state.currentQuote.isDefined) && state.currentQuote.get._1._4.isEmpty) {
-//            setState(stateWithQuoteAdvanced(state))
-//          } else if (quoteAllowsMove) {
+          if ((state.queuedQuotes.nonEmpty || state.currentQuote.isDefined) && state.currentQuote.get._1._4.isEmpty) {
+            setState(stateWithQuoteAdvanced(state))
+          } else if (quoteAllowsMove) {
             setState(updateDanteState(_.copy(xAcc = 2)))
-//          }
+          }
         case "ArrowLeft" =>
-//          if (quoteAllowsMove) {
+          if (quoteAllowsMove) {
             setState(updateDanteState(_.copy(xAcc = -2)))
-//          }
+          }
 
         case "ArrowUp" =>
-          if (/*quoteAllowsMove && */danteState.onGround) {
+          if (quoteAllowsMove && danteState.onGround) {
             setState(updateDanteState(_.copy(yVel = 20)))
           }
 
@@ -151,7 +151,7 @@ case class WorldState(objects: List[ObjectState[_]],
             obj
           }
         }.map {
-//          case s: DanteState => s.copy(xAcc = 0, xVel = 0)
+          case s: DanteState => s.copy(xAcc = 0, xVel = 0)
           case o => o
         },
         queuedQuotes = stateQueuedQuotesUpdated.queuedQuotes.tail,
