@@ -45,7 +45,7 @@ object AppCSS extends js.Object
               x = 0, y = 0, width = 7750, height = 3000, url = "/backdrop_brown.png"
             ),
             BackdropState(
-              x = 7750, y = 0, width = 2250, height = 3000, url = "/backdrop_brown.png"
+              x = 7750, y = 0, width = 2250, height = 3000, url = "/backdrop_riverofblood.png"
             ),
             MinotaurState(
               x = 28 * 50,
@@ -202,7 +202,7 @@ object AppCSS extends js.Object
               ("DanteState", "and Shadaj Laddad", None, Some(3000)),
               ("DanteState", "Art custom designed by Jing-Chen", None, Some(3000)),
               ("DanteState", "Game physics and mechanics implemented by Shadaj", None, Some(3000)),
-              ("DanteState", "Designed and coded from scratch in under one weeks", None, Some(3000)),
+              ("DanteState", "Designed and coded from scratch in under one week", None, Some(3000)),
               ("DanteState", "With over 2,500 lines of code", None, Some(3000)),
               ("DanteState", "And dozens of individual animation frames", None, Some(3000)),
               ("DanteState", "Thanks for playing!", None, Some(3000))
