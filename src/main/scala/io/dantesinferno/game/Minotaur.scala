@@ -9,6 +9,7 @@ import org.scalajs.dom.raw.HTMLImageElement
 
 case class MinotaurState(x: Double, y: Double,
                          spawnDantePosition: Double,
+                         maxRight: Double,
                          hasSpawned: Boolean = false,
                          currentQuote: Option[String] = None) extends CollidingObjectState[MinotaurState] with WithQuotes[MinotaurState] { self =>
   val collisionGeometry = new CollisionBox[MinotaurState] {
@@ -37,7 +38,8 @@ case class MinotaurState(x: Double, y: Double,
     if (hasSpawned) {
       val physicsThenMove = copy(
         x = {
-          if (danteLocation.x > (x + collisionGeometry.width / 2) + 10)
+          if (collisionGeometry.right >= maxRight) x
+          else if (danteLocation.x > (x + collisionGeometry.width / 2) + 10)
             x + 2
           else if (danteLocation.x < (x + collisionGeometry.width / 2) - 10)
             x - 2

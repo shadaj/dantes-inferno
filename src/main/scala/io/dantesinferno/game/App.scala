@@ -33,10 +33,11 @@ object AppCSS extends js.Object
             MinotaurState(
               x = 28 * 50,
               spawnDantePosition = 28 * 50 + 1250,
-              y = 500
+              maxRight = 3400,
+              y = 1000
             )
           ) ++
-            genStairs(0, 500, List(
+            genStairs(0, 1000, List(
               50, 50, 50, 51, 53, 55, 57, 59, 61,
               40, 40, 40, 40, 40,
               30, 30, 30, 30, 30, 30, 31, 32, 33, 34, 35,
@@ -45,24 +46,35 @@ object AppCSS extends js.Object
             ))
           ++ List(
             GroundState(
-              y = 500, x = 0, width = 28 * 50 + 2000
+              y = 1000, x = 0, width = 3400
+            )
+          ) ++
+            genStairs(3400, 500, List(
+              0, 50,
+              40, 40, 40, 40, 40,
+              39, 38, 35, 30, 30, 29, 29, 28, 28, 27, 27, 26,
+              10, 10, 10, 10, 10, 10, 9, 8, 7, 6, 5, 5, 5, 5, 6, 7, 7, 8, 8, 9
+            )) // 39 blocks wide
+          ++ List(
+            GroundState(
+              y = 500, x = 3400, width = 5000
             ),
             WallState(
               left = -200,
               right = 0
             ),
             WallState(
-              left = 3400,
-              right = 3600
+              left = 8400,
+              right = 8600
             ),
-            GroundState(
-              y = 0
-            ),
+//            GroundState(
+//              y = 0
+//            ),
             VirgilState(
-              x = 0, y = 1000, xVel = 0
+              x = 0, y = 1500, xVel = 0
             ),
             DanteState(
-              x = 0, y = 1000
+              x = 0, y = 1500
             )
           ),
           triggeredQuotes = List(
@@ -79,7 +91,7 @@ object AppCSS extends js.Object
             )
           ),
           windowX = -20,
-          windowY = 800
+          windowY = 1300
         ))
       )
     )
