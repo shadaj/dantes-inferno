@@ -18,8 +18,8 @@ case class CentaurState(x: Double, y: Double,
   val collisionGeometry = new CollisionBox[CentaurState] {
     override def left: Double = if (hasSpawned) x else -100
     override def bottom: Double = if (hasSpawned) y else -100
-    override def right: Double = if (hasSpawned) x + 94 else -100
-    override def top: Double = if (hasSpawned) y + 94 else -100
+    override def right: Double = if (hasSpawned) x + 94 * 1.5 else -100
+    override def top: Double = if (hasSpawned) y + 94 * 0.8 else -100
 
     override def state = self
 
@@ -45,13 +45,20 @@ case class CentaurState(x: Double, y: Double,
         val nextMinotaur = worldState.objects.filter(_.isInstanceOf[CentaurState]).map(_.asInstanceOf[CentaurState])
           .map(_.collisionGeometry.left).filter(_ > collisionGeometry.right).sorted.headOption
 
-        val targetPoint = nextMinotaur.getOrElse(danteLocation.collisionGeometry.left)
+        var targetPoint = nextMinotaur.getOrElse(danteLocation.collisionGeometry.left)
 
         val physicsThenMove = copy(
           x = {
+            val yCheck = danteLocation.collisionGeometry.bottom - this.collisionGeometry.top
+            var mult = 1D
+            if (yCheck > -5 && yCheck < 5) {
+              targetPoint = targetPoint + 28 + 100
+              mult = 1.5D
+            }
             if (danteLocation.x >= stopMovingDantePosition) x
-            else if (targetPoint > collisionGeometry.right + 5)
-              x + 2
+            else if (targetPoint > collisionGeometry.right + 5) {
+                x + 2 * mult
+            }
             else if (targetPoint < collisionGeometry.left - 5)
               x - 2
             else x
@@ -115,8 +122,8 @@ case class CentaurState(x: Double, y: Double,
             val imageRow = (if (state.moving) 4 else 0) + (if (state.facingRight) 0 else 2) + (if (props.ds.isRelaxed) 1 else 0)
             Image(
               image = state.danteImage.get,
-              x = 0, y = 0,
-              width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
+              x = 0, y = -94 * 0.7,
+              width = props.ds.collisionGeometry.width, height = 94 * 1.5,
               crop = Some(Crop(
                 x = if (state.moving) spriteWidth * ((props.tick / 10) % 4) else 0,
                 y = imageRow * spriteHeight,
@@ -126,14 +133,15 @@ case class CentaurState(x: Double, y: Double,
             )
           } else {
             Rect(
-              x = 0, y = 0,
-              width = props.ds.collisionGeometry.width, height = props.ds.collisionGeometry.height,
+              x = 0, y = -94 * 0.7,
+              width = props.ds.collisionGeometry.width, height = 94 * 1.5,
               fill = "yellow"
             )
           },
           props.ds.currentQuote.filter(_ => props.ds.talks).map { quote =>
             Text(
-              x = props.ds.collisionGeometry.width, y = 0,
+//              x = props.ds.collisionGeometry.width, y = 0,
+              x = 120, y = -100,
               width = props.ds.collisionGeometry.width,
               text = quote,
               fontSize = 20, fontFamily = "Times",
