@@ -38,10 +38,10 @@ case class MinotaurState(x: Double, y: Double,
     if (hasSpawned) {
       val physicsThenMove = copy(
         x = {
-          if (collisionGeometry.right >= maxRight) x
-          else if (danteLocation.x > (x + collisionGeometry.width / 2) + 10)
+          if (collisionGeometry.right >= maxRight) maxRight - collisionGeometry.width
+          else if (danteLocation.collisionGeometry.left > collisionGeometry.right + 10)
             x + 2
-          else if (danteLocation.x < (x + collisionGeometry.width / 2) - 10)
+          else if (danteLocation.collisionGeometry.right < collisionGeometry.left - 10)
             x - 2
           else x
         }
@@ -119,7 +119,7 @@ case class MinotaurState(x: Double, y: Double,
           },
           props.ds.currentQuote.map { quote =>
             Text(
-              x = 20, y = -50,
+              x = props.ds.collisionGeometry.width, y = 0,
               width = 300,
               text = quote,
               fontSize = 20, fontFamily = "Times",

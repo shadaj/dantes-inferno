@@ -42,7 +42,7 @@ object AppCSS extends js.Object
         World(WorldState(
           List(
             BackdropState(
-              x = 0, y = 0, width = 8000, height = 3000
+              x = 0, y = 0, width = 10000, height = 3000
             ),
             MinotaurState(
               x = 28 * 50,
@@ -97,54 +97,112 @@ object AppCSS extends js.Object
               y = 500,
               spawnDantePosition = 6500,
               stopMovingDantePosition = 1000000000,
-              relaxDantePosition = 7000
+              relaxDantePosition = 7000,
+              talks = true
             )
-          ) ++ List(
+          ) ++
+            genStairs(8000, 0, List(
+              50, 50, 50, 49, 48, 47, 46, 45, 44,
+              40, 40, 40, 40, 40,
+              30, 30, 30, 30, 30, 30, 29, 28, 27, 26, 25,
+              21, 20,
+              10, 9, 8, 7, 6, 5, 4, 3, 2, 1 // 37 blocks wide
+            ))
+          ++ List(
             WallState(
               left = -200,
               right = 0
             ),
             WallState(
-              left = 8400,
-              right = 8600
+              left = 10000,
+              right = 10200
             ),
             GroundState(
               y = 0
             ),
-            VirgilState(
-              x = 0, y = 1500, xVel = 0
-            ),
             DanteState(
               x = 0, y = 1500
+            ),
+            VirgilState(
+              x = 0, y = 1500, xVel = 0
             )
           ),
           triggeredQuotes = List(
             75D -> List(
-              ("VirgilState" ,"This is the entrance to the amaze amaze canto amaze canto amaze", Some(0D), None),
-              ("DanteState", "Hello I am dante lolz", Some(0D), None)
+              ("DanteState", "Canto XII", Some(0D), None),
+              ("VirgilState", "Here we go!", Some(0D), None),
+              ("VirgilState", "Watch your step!", Some(0D), None),
+              ("DanteState", "Yes master", Some(0D), None)
             ),
             1500D -> List(
-              ("VirgilState", "WOW I AM INTRODUCING THE MINOTAUR", None, None)
+              ("VirgilState", "Dante, be vigilant, there is a Minotaur somewhere here.", None, None)
             ),
             2650D -> List(
-              ("MinotaurState", "HADLFJLAKSDJFKLADSJF", Some(28 * 50 + 500D), Some(4000)),
-              ("VirgilState", "Run Dante! For here comes the Minotaur!", None, Some(3000))
+              ("MinotaurState", "ROAR ROAR ROAR", Some(28 * 50 + 500D), Some(4000)),
+              ("DanteState", "What's that?", Some(2300D), Some(2000)),
+              ("VirgilState", "It's the minotaur!", Some(2300D), Some(4000)),
+              ("VirgilState", "Some people think it's a man with a bull's head", Some(2300D), Some(4000)),
+              ("VirgilState", "but it's actually a bull with a man's head!", Some(2300D), Some(4000)),
+              ("DanteState", "He is \"[biting] himself in rage like one insane.\" (12)", Some(2300D), Some(5000)),
+              ("VirgilState", "Stop quoting yourself and run!", Some(2300D), Some(4000)),
+              ("VirgilState", "\"Go quickly, while he's raging.\" (22)", Some(2300D), Some(6000))
             ),
             3600D -> List(
-              ("MinotaurState", "ARGGG (something angry he cant get dante welp)", Some(3000D), Some(3000)),
-              ("VirgilState", "Good work Dante! ajsfldkjsalkdfj something more", Some(3000D), None)
+              ("MinotaurState", "ROAR ROAR ROAR", Some(3000D), Some(2000)),
+              ("VirgilState", "That was close.", Some(3000D), Some(2000))
             ),
-            4900D -> List(
-              ("VirgilState", "Be warned Dante, up ahead are the centaurs", None, None),
-              ("VirgilState", "Some more info about centaurs look at me being smart", None, None)
+            3700D -> List(
+              ("VirgilState", "Last time I was down here, \"this rock had not yet slid.\" (30)", Some(3600D), Some(5000)),
+              ("DanteState", "You're doing it too.", Some(3600D), Some(5000)),
+              ("VirgilState", "No, I'm quoting you.", Some(3600D), Some(5000)),
+              ("VirgilState", "Did you know that down there, the river of blood", Some(3600D), Some(5000)),
+              ("VirgilState", "boils those \"Whose violence hurt others\" (42)?", Some(3600D), Some(5000)),
+              ("DanteState", "I just ate", Some(3600D), Some(3000)),
+              ("VirgilState", "Want some blood noodles with blood soup?", Some(3600D), Some(4000))
             ),
             6500D -> List(
-              ("VirgilState", "Dante! Here come some centaurs!", Some(6200D), Some(3000)),
-              ("CentaurState", "Hello Dante, you must go with us to see Chiron.", Some(5800D), Some(3000))
+              ("CentaurState", "Watcha doin mate", Some(5800D), Some(3000)),
+              ("VirgilState", "Take us to Chiron", Some(6000D), Some(3000)),
+              ("CentaurState", "ok", Some(5800D), Some(3000)),
+              ("VirgilState", "That was Nessus he's dead now", Some(6000D), Some(3000)),
+              ("DanteState", "Figured. When can I go home?", Some(6000D), Some(3000)),
+              ("VirgilState", "Already? You've still got 88 Cantos to go!", Some(6000D), Some(3000))
             ),
             7200D -> List(
-              ("VirgilState", "Hello Chiron, Dante and I are looking to travel through this circle.", Some(6800D), Some(3000)),
-              ("ChironState", "Hello Virgil and Dante.", Some(6800D), Some(3000))
+              ("VirgilState", "This is the great Chiron, another centaur.", Some(6800D), Some(3000)),
+              ("VirgilState", "\"They circle the // The moat by thousands\" (66).", Some(6800D), Some(3000)),
+              ("ChironState", "Hello Virgil and Dante.", Some(6800D), Some(3000)),
+              ("DanteState", "Moat?", Some(6800D), Some(3000)),
+              ("DanteState", "Did you mean... river of blood, perhaps?", Some(6800D), Some(3000)),
+              ("ChironState", "Looky here, its one of those things", Some(6800D), Some(3000)),
+              ("ChironState", "whose \"steps displace // Objects his body touches?", Some(6800D), Some(3000)),
+              ("ChironState", "Feet of the dead // Are not accustomed to behave like that.\" (74)", Some(6800D), Some(3000)),
+              ("DanteState", "I stepped in a pothole.", Some(6800D), Some(3000)),
+              ("VirgilState", "\"He is indeed alive\" (78)", Some(6800D), Some(3000)),
+              ("VirgilState", "And he's a wimp, so could you like", Some(6800D), Some(3000)),
+              ("VirgilState", "loan me a centaur to carry him or something?", Some(6800D), Some(3000)),
+              ("ChironState", "Sure, 5 Drachma", Some(6800D), Some(3000)),
+              ("VirgilState", "I only carry Denarii", Some(6800D), Some(3000)),
+              ("ChironState", "Exhange rate is 3:1", Some(6800D), Some(3000)),
+              ("VirgilState", "... fine.", Some(6800D), Some(3000)),
+              ("ChironState", "Nessus!", Some(6800D), Some(3000)),
+              ("ChironState", "\"Go back and guide them\" (92)", Some(6800D), Some(3000)),
+              ("ChironState", "and then come back in time for dinner!", Some(6800D), Some(3000)),
+              ("CentaurState", "k", Some(6800D), Some(3000)),
+              ("DanteState", "What do they even eat down here?", Some(6800D), Some(3000)),
+              ("VirgilState", "Don't ask.", Some(6800D), Some(3000))
+            ),
+            9500D -> List(
+              ("VirgilState", "Onto the next Canto!", None, Some(3000)),
+              ("DanteState", "Created By:", None, Some(3000)),
+              ("DanteState", "Jing-Chen Peng", None, Some(3000)),
+              ("DanteState", "and Shadaj Laddad", None, Some(3000)),
+              ("DanteState", "Art custom designed by Jing-Chen", None, Some(3000)),
+              ("DanteState", "Game mechanics implemented by Shadaj", None, Some(3000)),
+              ("DanteState", "Designed and coded in under two weeks", None, Some(3000)),
+              ("DanteState", "With over 2,500 lines of code", None, Some(3000)),
+              ("DanteState", "And dozens of individual animation frames", None, Some(3000)),
+              ("DanteState", "Thanks for playing!", None, Some(3000))
             )
           ),
           windowX = -20,

@@ -11,6 +11,7 @@ case class CentaurState(x: Double, y: Double,
                         spawnDantePosition: Double,
                         stopMovingDantePosition: Double,
                         relaxDantePosition: Double,
+                        talks: Boolean = false,
                         hasSpawned: Boolean = false,
                         isRelaxed: Boolean = false,
                         currentQuote: Option[String] = None) extends CollidingObjectState[CentaurState] with WithQuotes[CentaurState] { self =>
@@ -55,7 +56,7 @@ case class CentaurState(x: Double, y: Double,
               x - 2
             else x
           },
-          y = y - 0.2
+          y = y - 2
         )
 
         physicsThenMove.superUpdate(worldState.copy(
@@ -130,9 +131,9 @@ case class CentaurState(x: Double, y: Double,
               fill = "yellow"
             )
           },
-          props.ds.currentQuote.map { quote =>
+          props.ds.currentQuote.filter(_ => props.ds.talks).map { quote =>
             Text(
-              x = 20, y = -100,
+              x = props.ds.collisionGeometry.width, y = 0,
               width = props.ds.collisionGeometry.width,
               text = quote,
               fontSize = 20, fontFamily = "Times",

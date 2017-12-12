@@ -98,14 +98,14 @@ case class DanteState(x: Double, y: Double,
       },
       props.ds.currentQuote.map { quote =>
         Text(
-          x = 20, y = -25,
-          width = 300,
+          x = props.ds.collisionGeometry.width, y = 0,
+          width = 200,
           text = quote,
           fontSize = 20, fontFamily = "Times",
           fill = "white"
         ): ReactElement
       }.getOrElse(Fragment()),
-      if (false) {
+      if (true) {
         Fragment()
       } else {
         Text(

@@ -63,8 +63,8 @@ case class ChironState(x: Double, y: Double,
       },
       props.currentQuote.map { quote =>
         Text(
-          x = 20, y = -50,
-          width = 300,
+          x = 30, y = 0,
+          width = 200,
           text = quote,
           fontSize = 20, fontFamily = "Times",
           fill = "white"
