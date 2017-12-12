@@ -42,7 +42,7 @@ object AppCSS extends js.Object
         World(WorldState(
           List(
             BackdropState(
-              x = 0, y = 1000, width = 3400, height = 2000
+              x = 0, y = 0, width = 8000, height = 3000
             ),
             MinotaurState(
               x = 28 * 50,
@@ -72,20 +72,34 @@ object AppCSS extends js.Object
             )) // 47 blocks wide
           ++ List(
             GroundState(
-              y = 500, x = 3400, width = 3600
+              y = 500, x = 3400, width = 4600
+            ),
+            ChironState(
+              x = 7300,
+              y = 500
+            ),
+            CentaurState(
+              x = 5600,
+              y = 500,
+              spawnDantePosition = 6500,
+              stopMovingDantePosition = 7000,
+              relaxDantePosition = 7000
+            ),
+            CentaurState(
+              x = 5700,
+              y = 500,
+              spawnDantePosition = 6500,
+              stopMovingDantePosition = 7000,
+              relaxDantePosition = 7000
+            ),
+            CentaurState(
+              x = 5900,
+              y = 500,
+              spawnDantePosition = 6500,
+              stopMovingDantePosition = 1000000000,
+              relaxDantePosition = 7000
             )
-          ) ++
-            List(
-              StaticBoxState(x = 6000, y = 500, width = 50, height = 50),
-              StaticBoxState(x = 6050, y = 550, width = 50, height = 50),
-              StaticBoxState(x = 6100, y = 600, width = 50, height = 50)
-            ) ++ List.tabulate(14)(i => StaticBoxState(x = 6150 + (i * 50), y = 650, width = 50, height = 50))
-            ++ List(
-              StaticBoxState(x = 6850, y = 600, width = 50, height = 50),
-              StaticBoxState(x = 6900, y = 550, width = 50, height = 50),
-              StaticBoxState(x = 6950, y = 500, width = 50, height = 50)
-            )
-          ++ List(
+          ) ++ List(
             WallState(
               left = -200,
               right = 0
@@ -123,6 +137,14 @@ object AppCSS extends js.Object
             4900D -> List(
               ("VirgilState", "Be warned Dante, up ahead are the centaurs", None, None),
               ("VirgilState", "Some more info about centaurs look at me being smart", None, None)
+            ),
+            6500D -> List(
+              ("VirgilState", "Dante! Here come some centaurs!", Some(6200D), Some(3000)),
+              ("CentaurState", "Hello Dante, you must go with us to see Chiron.", Some(5800D), Some(3000))
+            ),
+            7200D -> List(
+              ("VirgilState", "Hello Chiron, Dante and I are looking to travel through this circle.", Some(6800D), Some(3000)),
+              ("ChironState", "Hello Virgil and Dante.", Some(6800D), Some(3000))
             )
           ),
           windowX = -20,
