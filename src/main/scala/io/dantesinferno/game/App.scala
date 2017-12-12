@@ -72,7 +72,7 @@ object AppCSS extends js.Object
             )) // 47 blocks wide
           ++ List(
             GroundState(
-              y = 500, x = 3400, width = 4600
+              y = 500, x = 3400, width = 4800
             ),
             ChironState(
               x = 7300,
