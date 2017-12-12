@@ -155,21 +155,21 @@ object AppCSS extends js.Object
               ("VirgilState", "That was close.", Some(3000D), Some(1000))
             ),
             3700D -> List(
-              ("VirgilState", "Last time I was down here, \"this rock had not yet slid.\" (30)", Some(3600D), Some(3000)),
-              ("DanteState", "You're doing it too.", Some(3600D), Some(1000)),
-              ("VirgilState", "No, I'm quoting you.", Some(3600D), Some(1000)),
-              ("VirgilState", "Did you know that down there, the river of blood", Some(3600D), Some(3000)),
-              ("VirgilState", "boils those \"Whose violence hurt others\" (42)?", Some(3600D), Some(3000)),
-              ("DanteState", "I just ate", Some(3600D), Some(1000)),
-              ("VirgilState", "Want some blood noodles with blood soup?", Some(3600D), Some(2000))
+              ("VirgilState", "Last time I was down here, \"this rock had not yet slid.\" (30)", None, Some(3000)),
+              ("DanteState", "You're doing it too.", None, Some(1000)),
+              ("VirgilState", "No, I'm quoting you.", None, Some(1000)),
+              ("VirgilState", "Did you know that down there, the river of blood", None, Some(3000)),
+              ("VirgilState", "boils those \"Whose violence hurt others\" (42)?", None, Some(3000)),
+              ("DanteState", "I just ate", None, Some(1000)),
+              ("VirgilState", "Want some blood noodles with blood soup?", None, Some(2000))
             ),
             6800D -> List(
               ("CentaurState", "Watcha doin mate", Some(6000D), Some(3000)),
-              ("VirgilState", "Take us to Chiron", Some(6000D), Some(3000)),
+              ("VirgilState", "Take us to Chiron", Some(6300D), Some(3000)),
               ("CentaurState", "ok", Some(6000D), Some(1000)),
-              ("VirgilState", "That was Nessus he's dead now", Some(6000D), Some(3000)),
-              ("DanteState", "Figured. When can I go home?", Some(6000D), Some(3000)),
-              ("VirgilState", "Already? You've still got 88 Cantos to go!", Some(6000D), Some(3000))
+              ("VirgilState", "That was Nessus he's dead now", Some(6300D), Some(3000)),
+              ("DanteState", "Figured. When can I go home?", Some(6300D), Some(3000)),
+              ("VirgilState", "Already? You've still got 88 Cantos to go!", Some(6300D), Some(3000))
             ),
             7200D -> List(
               ("VirgilState", "This is the great Chiron, another centaur.", Some(6800D), Some(3000)),
